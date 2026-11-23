@@ -1,0 +1,306 @@
+{
+  "note": "셋리스트는 임시입니다. youtube 칸에 곡별 유튜브 링크(예: https://www.youtube.com/watch?v=XXXX)를 넣으면 카드에서 바로 재생됩니다. 비워두면 재생 버튼이 숨겨집니다. cover.on 을 false 로 바꾸면 셋리스트가 모두에게 보입니다. 덮어 둔 동안에도 주소에 ?setlist=show 를 붙여 한 번 들어오면 그 기기에서는 계속 진짜 목록이 보입니다 (?setlist=hide 로 해제). update 는 셋리스트가 바뀌었을 때 메인에 한 번 뜨는 안내 창입니다(js/setlist-note.js): id 를 새로 바꾸면 다시 뜨고, until 이 지나면 안 뜹니다. 지우면 창도 없어집니다.",
+  "caption": "셋리스트는 당일 현장에서 조정될 수 있습니다.",
+  "cover": {
+    "on": false,
+    "label": "COMING SOON",
+    "ko": "셋리스트는 공연이 가까워지면 공개됩니다",
+    "sub": "미리 들어보신 후 공연을 관람하실 수 있습니다"
+  },
+  "update": {
+    "id": "2026-11-01",
+    "until": "2026-11-05T19:00:00+09:00",
+    "stages": [
+      {
+        "label": "1부",
+        "add": [
+          "좋지 아니한가",
+          "Dirt on my leather"
+        ],
+        "remove": [
+          "I Robbed a Bank"
+        ],
+        "order": true
+      },
+      {
+        "label": "2부",
+        "add": [
+          "I Robbed a Bank",
+          "과제곡 (적재 야간작업실 ver.)",
+          "And July"
+        ],
+        "remove": [
+          "Dirt on my leather"
+        ],
+        "order": true
+      },
+      {
+        "label": "3부",
+        "add": [],
+        "remove": [
+          "Journey",
+          "I Robbed a Bank",
+          "And July"
+        ],
+        "order": true
+      }
+    ]
+  },
+  "stages": [
+    {
+      "id": "1st",
+      "songs": [
+        {
+          "artist": "윤마치 (MRCH)",
+          "title": "지구를 가졌어도",
+          "youtube": "https://www.youtube.com/watch?v=FdXEC5LiEf4"
+        },
+        {
+          "artist": "N.Flying (엔플라잉)",
+          "title": "옥탑방",
+          "youtube": ""
+        },
+        {
+          "artist": "LUCY",
+          "title": "아니근데진짜",
+          "youtube": ""
+        },
+        {
+          "artist": "공원",
+          "title": "곰팡이",
+          "youtube": "https://www.youtube.com/watch?v=r9PTEc34vuY"
+        },
+        {
+          "artist": "버즈",
+          "title": "나에게로 떠나는 여행",
+          "youtube": ""
+        },
+        {
+          "artist": "유다빈밴드",
+          "title": "좋지 아니한가",
+          "youtube": ""
+        },
+        {
+          "artist": "잔나비",
+          "title": "투게더!",
+          "youtube": "https://www.youtube.com/watch?v=h_OEP4GLpsE"
+        },
+        {
+          "artist": "한로로",
+          "title": "용의자",
+          "youtube": ""
+        },
+        {
+          "artist": "한로로",
+          "title": "ㅈㅣㅂ",
+          "youtube": ""
+        },
+        {
+          "artist": "LUCY",
+          "title": "히어로",
+          "youtube": ""
+        },
+        {
+          "artist": "한로로",
+          "title": "너와나",
+          "youtube": "https://www.youtube.com/watch?v=Tos8R9Tcem8"
+        },
+        {
+          "artist": "헤이즈",
+          "title": "And July",
+          "youtube": ""
+        },
+        {
+          "artist": "오월오일",
+          "title": "Echo",
+          "youtube": "https://www.youtube.com/watch?v=QINfweURFZg"
+        },
+        {
+          "artist": "WOODZ",
+          "title": "Dirt on my leather",
+          "youtube": ""
+        },
+        {
+          "artist": "터치드 (TOUCHED)",
+          "title": "Hi Bully",
+          "youtube": "https://www.youtube.com/watch?v=x7lduCekwu4"
+        },
+        {
+          "artist": "아이유 (IU)",
+          "title": "있잖아 (Rock Ver.)",
+          "youtube": ""
+        }
+      ]
+    },
+    {
+      "id": "2nd",
+      "songs": [
+        {
+          "artist": "WOODZ",
+          "title": "Journey",
+          "youtube": ""
+        },
+        {
+          "artist": "윤마치 (MRCH)",
+          "title": "초록",
+          "youtube": "https://www.youtube.com/watch?v=0rG4WPZpGaY"
+        },
+        {
+          "artist": "LUCY",
+          "title": "맞네",
+          "youtube": ""
+        },
+        {
+          "artist": "잔나비",
+          "title": "투게더!",
+          "youtube": "https://www.youtube.com/watch?v=h_OEP4GLpsE"
+        },
+        {
+          "artist": "LUCY",
+          "title": "아니근데진짜",
+          "youtube": ""
+        },
+        {
+          "artist": "공원",
+          "title": "곰팡이",
+          "youtube": "https://www.youtube.com/watch?v=r9PTEc34vuY"
+        },
+        {
+          "artist": "유다빈밴드",
+          "title": "불",
+          "youtube": ""
+        },
+        {
+          "artist": "N.Flying (엔플라잉)",
+          "title": "Flashback",
+          "youtube": ""
+        },
+        {
+          "artist": "터치드 (TOUCHED)",
+          "title": "야경",
+          "youtube": "https://www.youtube.com/watch?v=GA1lzBnSWEU"
+        },
+        {
+          "artist": "검정치마",
+          "title": "Antifreeze",
+          "youtube": ""
+        },
+        {
+          "artist": "한로로",
+          "title": "ㅈㅣㅂ",
+          "youtube": ""
+        },
+        {
+          "artist": "새소년",
+          "title": "joke!",
+          "youtube": "https://www.youtube.com/watch?v=_ZaQmQTlVkE"
+        },
+        {
+          "artist": "아이유 (IU)",
+          "title": "있잖아 (Rock Ver.)",
+          "youtube": ""
+        },
+        {
+          "artist": "Nerd Connection",
+          "title": "I Robbed a Bank",
+          "youtube": ""
+        },
+        {
+          "artist": "이무진",
+          "title": "과제곡 (적재 야간작업실 ver.)",
+          "youtube": ""
+        },
+        {
+          "artist": "헤이즈",
+          "title": "And July",
+          "youtube": ""
+        },
+        {
+          "artist": "한로로",
+          "title": "게임오버?",
+          "youtube": ""
+        },
+        {
+          "artist": "유다빈밴드",
+          "title": "좋지 아니한가",
+          "youtube": ""
+        }
+      ]
+    },
+    {
+      "id": "3rd",
+      "songs": [
+        {
+          "artist": "검정치마",
+          "title": "Antifreeze",
+          "youtube": ""
+        },
+        {
+          "artist": "터치드 (TOUCHED)",
+          "title": "야경",
+          "youtube": "https://www.youtube.com/watch?v=GA1lzBnSWEU"
+        },
+        {
+          "artist": "유다빈밴드",
+          "title": "바람",
+          "youtube": ""
+        },
+        {
+          "artist": "자우림",
+          "title": "스물다섯 스물하나",
+          "youtube": "https://www.youtube.com/watch?v=gIM3cz4_Bpw"
+        },
+        {
+          "artist": "Nerd Connection",
+          "title": "우린 노래가 될까",
+          "youtube": ""
+        },
+        {
+          "artist": "한로로",
+          "title": "용의자",
+          "youtube": ""
+        },
+        {
+          "artist": "Madonna",
+          "title": "Material Girl (The Volunteers ver.)",
+          "youtube": ""
+        },
+        {
+          "artist": "이무진",
+          "title": "과제곡 (적재 야간작업실 ver.)",
+          "youtube": ""
+        },
+        {
+          "artist": "새소년",
+          "title": "joke!",
+          "youtube": "https://www.youtube.com/watch?v=_ZaQmQTlVkE"
+        },
+        {
+          "artist": "윤마치 (MRCH)",
+          "title": "초록",
+          "youtube": "https://www.youtube.com/watch?v=0rG4WPZpGaY"
+        },
+        {
+          "artist": "오월오일",
+          "title": "Echo",
+          "youtube": "https://www.youtube.com/watch?v=QINfweURFZg"
+        },
+        {
+          "artist": "공원",
+          "title": "불꽃놀이",
+          "youtube": ""
+        },
+        {
+          "artist": "이하이",
+          "title": "Rose",
+          "youtube": ""
+        },
+        {
+          "artist": "HYUKOH (혁오)",
+          "title": "LOVE YA!",
+          "youtube": ""
+        }
+      ]
+    }
+  ]
+}

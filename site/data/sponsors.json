@@ -1,0 +1,265 @@
+{
+  "note": "후원사 목록입니다. 후원 금액은 이 파일에 절대 적지 마세요. 이 파일은 누구나 열어볼 수 있습니다. 등급은 tiers 의 순서와 카드 크기(headline > lg > md > sm)로만 드러내고, 이름표는 헤드라인에만 답니다. label 칸이 비어 있으면 그 묶음은 제목 없이 앞 묶음에 바로 이어 붙습니다. 같은 묶음 안에서는 순서로도 차이가 드러나지 않도록 가나다순으로 둡니다. 간판 그림은 js/shop-art.js 에 직접 그려 두었고 sign 칸이 그 이름입니다. search 칸이 있으면 그 말 그대로 네이버 지도에서 찾습니다(가게가 알려 준 상호). search 도 map 도 없으면 '제천 + 매장명' 으로 찾습니다. tel 칸에 전화번호를 넣으면 카드를 눌렀을 때 전화 걸기 버튼이 같이 뜹니다. 사람은 person 을 true 로 둡니다 — 지도 링크 없이 이름만 나옵니다. count 가 false 인 묶음은 '함께해 주신 N곳' 숫자에 넣지 않습니다. 사람의 role 칸은 이름 아래에 작은 대문자로 나옵니다.",
+  "intro": "이번 공연은 제천 세명대 앞 가게들이 함께 만들어 주셨습니다. 공연 전후로 꼭 한 번 들러 주세요.",
+  "tiers": [
+    {
+      "id": "headline",
+      "label": "HEADLINE PARTNER",
+      "ko": "가장 큰 응원을 해주신 매장들",
+      "sub": "",
+      "sponsors": [
+        {
+          "name": "풍덕천 두꺼비집 하소점",
+          "theme": "toad",
+          "marks": [
+            "실내포차",
+            "소주",
+            "TOAD HOUSE"
+          ],
+          "map": "",
+          "search": "풍덕천두꺼비집 제천하소동점"
+        },
+        {
+          "name": "야마",
+          "theme": "yama",
+          "marks": [
+            "이자카야",
+            "노렌",
+            "夜馬"
+          ],
+          "map": ""
+        },
+        {
+          "name": "미미싸롱",
+          "theme": "mimi",
+          "marks": [
+            "맥주",
+            "소주",
+            "네온사인"
+          ],
+          "map": ""
+        },
+        {
+          "name": "오디향",
+          "theme": "odi",
+          "marks": [
+            "자연밥상",
+            "오디",
+            "반찬"
+          ],
+          "map": ""
+        }
+      ]
+    },
+    {
+      "id": "lg",
+      "label": "MAIN PARTNER",
+      "ko": "아낌없이 큰 응원을 해주신 매장들",
+      "sub": "",
+      "sponsors": [
+        {
+          "name": "타임약국",
+          "map": "",
+          "sign": "time"
+        },
+        {
+          "name": "부리또인",
+          "map": "",
+          "sign": "burritoin",
+          "search": "부리또인 세명대학교점"
+        },
+        {
+          "name": "수원지동",
+          "map": "",
+          "sign": "suwonjidong"
+        },
+        {
+          "name": "포카츠",
+          "map": "",
+          "sign": "pokatsu"
+        },
+        {
+          "name": "이가짬뽕",
+          "map": "",
+          "sign": "igajjamppong"
+        },
+        {
+          "name": "우자매순대국",
+          "map": "",
+          "sign": "woojamae"
+        }
+      ]
+    },
+    {
+      "id": "md",
+      "label": "SUPPORTING PARTNER",
+      "ko": "격려와 함께 큰 응원을 해주신 매장들",
+      "sub": "",
+      "sponsors": [
+        {
+          "name": "국밥생각",
+          "map": "",
+          "search": "국밥생각 세명대점"
+        },
+        {
+          "name": "대학로",
+          "map": "",
+          "search": "제천 대학로 실내포차"
+        },
+        {
+          "name": "대학반점",
+          "map": ""
+        },
+        {
+          "name": "대학촌",
+          "map": ""
+        },
+        {
+          "name": "더꼬치다",
+          "map": "",
+          "search": "더꼬치다 모산동"
+        },
+        {
+          "name": "돈페테리아",
+          "map": ""
+        },
+        {
+          "name": "동그라미 네모",
+          "map": ""
+        },
+        {
+          "name": "띠아모",
+          "map": ""
+        },
+        {
+          "name": "마라순코우",
+          "map": ""
+        },
+        {
+          "name": "못말리는 파닭",
+          "map": "",
+          "search": "못말리는파닭 제천점"
+        },
+        {
+          "name": "미스터빠삭",
+          "map": "",
+          "search": "미스터빠삭 제천세명대점"
+        },
+        {
+          "name": "봄봄",
+          "map": "",
+          "search": "카페봄봄 제천 세명대점"
+        },
+        {
+          "name": "서울마트",
+          "map": "",
+          "search": "제천 서울마트분식"
+        },
+        {
+          "name": "설원 중화요리",
+          "map": ""
+        },
+        {
+          "name": "주당",
+          "map": ""
+        },
+        {
+          "name": "준노래연습장",
+          "map": ""
+        }
+      ]
+    },
+    {
+      "id": "sm",
+      "label": "",
+      "ko": "",
+      "sub": "",
+      "sponsors": [
+        {
+          "name": "엔탑 노래방",
+          "map": "",
+          "search": "충청북도 제천시 모산동 52-6"
+        }
+      ]
+    },
+    {
+      "id": "alumni",
+      "label": "HALL OF FAME",
+      "ko": "일일호프를 도와주신 I.F 졸업 선배님들",
+      "sub": "",
+      "count": false,
+      "sponsors": [
+        {
+          "name": "졸업 선배 1",
+          "person": true,
+          "role": "DRUM"
+        },
+        {
+          "name": "졸업 선배 2",
+          "person": true,
+          "role": "LEADER · BASS · PIANO"
+        },
+        {
+          "name": "졸업 선배 3",
+          "person": true,
+          "role": "VOCAL"
+        },
+        {
+          "name": "졸업 선배 4",
+          "person": true,
+          "role": "DRUM"
+        },
+        {
+          "name": "졸업 선배 5",
+          "person": true,
+          "role": "BASS"
+        },
+        {
+          "name": "졸업 선배 6",
+          "person": true,
+          "role": "LEADER · GUITAR"
+        },
+        {
+          "name": "졸업 선배 7",
+          "person": true,
+          "role": "PIANO"
+        },
+        {
+          "name": "졸업 선배 8",
+          "person": true,
+          "role": "VICE LEADER · PIANO"
+        },
+        {
+          "name": "졸업 선배 9",
+          "person": true,
+          "role": "BASS"
+        },
+        {
+          "name": "졸업 선배 10",
+          "person": true,
+          "role": "LEADER · DRUM · BASS"
+        },
+        {
+          "name": "졸업 선배 11",
+          "person": true,
+          "role": "VICE LEADER · DRUM"
+        },
+        {
+          "name": "졸업 선배 12",
+          "person": true,
+          "role": "DRUM"
+        },
+        {
+          "name": "졸업 선배 13",
+          "person": true,
+          "role": "BASS"
+        },
+        {
+          "name": "졸업 선배 14",
+          "person": true,
+          "role": "GUITAR"
+        }
+      ]
+    }
+  ]
+}

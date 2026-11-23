@@ -1,0 +1,61 @@
+{
+  "band": "I.F",
+  "school": "세명대학교",
+  "community": "SEMYUNG UNIVERSITY LIVE PERFORMANCE COMMUNITY",
+  "communityShort": "SEMYUNG UNIV. LIVE PERFORMANCE COMMUNITY",
+  "since": 1992,
+  "edition": "35TH",
+  "slogan": "ROCKSTARS NEVER DIE",
+
+  "date": "2026-11-05",
+  "dateLabel": "2026.11.05",
+  "weekday": "THU",
+  "weekdayLong": "THURSDAY",
+  "open": "19:00",
+  "close": "02:00",
+  "startAt": "2026-11-05T19:00:00+09:00",
+  "endAt": "2026-11-06T02:00:00+09:00",
+
+  "venue": {
+    "name": "청춘싸롱",
+    "en": "CHEONG-CHOON SALON",
+    "city": "제천",
+    "address": "충청북도 제천시 세명로 41",
+    "mapNaver": "https://map.naver.com/p/search/%EC%B6%A9%EC%B2%AD%EB%B6%81%EB%8F%84%20%EC%A0%9C%EC%B2%9C%EC%8B%9C%20%EC%84%B8%EB%AA%85%EB%A1%9C%2041",
+    "mapKakao": "https://map.kakao.com/link/search/%EC%B6%A9%EC%B2%AD%EB%B6%81%EB%8F%84%20%EC%A0%9C%EC%B2%9C%EC%8B%9C%20%EC%84%B8%EB%AA%85%EB%A1%9C%2041"
+  },
+
+  "stages": [
+    { "id": "1st", "label": "1ST", "start": "19:00", "end": "21:00" },
+    { "id": "2nd", "label": "2ND", "start": "21:30", "end": "23:30" },
+    { "id": "3rd", "label": "3RD", "start": "00:00", "end": "02:00" }
+  ],
+
+  "ticket": {
+    "price": 5500,
+    "priceLabel": "₩5,500",
+    "presaleName": "사전 예매",
+    "doorPrice": 6500,
+    "doorLabel": "₩6,500",
+    "doorName": "현장 구매",
+    "perk": "티켓 1매 = 맥주 1잔",
+    "perkEn": "1 TICKET = 1 BEER",
+    "howToBuy": "계좌이체 후 휴대폰으로 바로 티켓을 받아보실\u00a0수 있습니다.\n*현장 구매도 가능합니다.",
+    "presaleNote": "사전 예매 시 1,000원 할인됩니다."
+  },
+
+  "contacts": [
+    { "role": "회장", "who": "hP+g24GB2aL1FUZUWUsdAQkJHx1cWUY=" },
+    { "role": "부회장", "who": "g9+t3YuZ3qX0FUZUWUsdAQkJHx1cWUY=" }
+  ],
+
+  "instagram": "smu_ifband",
+
+  "ticker": "1 TICKET 1 FREE DRINK ★ ROCKSTARS NEVER DIE ★ 35TH LIVE PERFORMANCE ★ SINCE 1992 ★ 2026.11.05 CHEONG-CHOON SALON ★ I.F LIVE PERFORMANCE ★",
+
+  "site": {
+    "url": "https://ifband.kro.kr",
+    "title": "I.F 2026 LIVE PERFORMANCE · 11.05 청춘싸롱",
+    "description": "세명대학교 라이브공연 동아리 I.F의 35번째 라이브. 2026년 11월 5일 목요일 19:00~02:00, 제천 청춘싸롱. 티켓 5,500원, 티켓 1매는 맥주 1잔."
+  }
+}
