@@ -1,0 +1,391 @@
+/* ============================================================
+   sections: 네비 / 히어로 / INFO / SETLIST / NOTICE / SPONSOR / 푸터
+   데스크탑 우선, 1024 / 640 에서 접힘
+   ============================================================ */
+
+/* ---------- NAV ---------- */
+.nav { position: sticky; top: 0; z-index: 50; height: var(--nav-h); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 var(--gutter); background: var(--ink); border-bottom: 1px solid rgba(241,234,226,.18); }
+.nav__logo { justify-self: start; background: var(--paper); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--pink); padding: 2px 10px; transform: rotate(-4deg); }
+.nav__logo img { height: 48px; width: auto; }
+.nav__menu { justify-self: center; display: flex; gap: 44px; align-items: center; }
+.nav__link { position: relative; padding-bottom: 6px; letter-spacing: .12em; font-size: var(--fs-body); }
+.nav__link::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; border-bottom: 2px dashed var(--paper); opacity: .5; transition: opacity .2s; }
+.nav__link:hover, .nav__link.is-active { color: var(--pink); }
+.nav__link.is-active::after { border-color: var(--pink); opacity: 1; }
+.nav__right { justify-self: end; display: flex; align-items: center; gap: 12px; }
+.nav__ticket { display: inline-block; background: var(--pink); color: var(--ink); font-size: var(--fs-body); letter-spacing: .08em; padding: 10px 22px; transform: rotate(2deg); box-shadow: 4px 4px 0 var(--paper); }
+.nav__burger { display: none; width: 44px; height: 44px; border: 2px solid var(--paper); align-items: center; justify-content: center; }
+.nav__mobile { position: absolute; left: 0; right: 0; top: 100%; display: flex; flex-direction: column; background: var(--ink); border-bottom: 1px solid rgba(241,234,226,.18); }
+.nav__mobile a { padding: 18px var(--gutter); font-size: var(--fs-lead); letter-spacing: .12em; border-top: 1px dashed rgba(241,234,226,.25); }
+.nav__mobile-buy { background: var(--pink); color: var(--ink); border-top-style: solid !important; }
+
+/* ---------- HERO ---------- */
+.hero { min-height: calc(100svh - var(--nav-h)); padding-top: 40px; overflow: hidden; background: var(--ink); display: flex; flex-direction: column; }
+.hero__glow { position: absolute; border-radius: 50%; pointer-events: none; }
+.hero__glow--pink { left: 50%; top: -360px; width: 900px; height: 900px; margin-left: -450px; background: radial-gradient(circle, rgba(214,92,142,.7) 0%, rgba(214,92,142,.22) 40%, rgba(214,92,142,0) 70%); }
+.hero__glow--mint { left: -220px; top: 420px; width: 760px; height: 760px; background: radial-gradient(circle, rgba(77,190,140,.45) 0%, rgba(77,190,140,.12) 40%, rgba(77,190,140,0) 70%); }
+.hero__glow--pink2 { right: -220px; top: 460px; width: 760px; height: 760px; background: radial-gradient(circle, rgba(214,92,142,.4) 0%, rgba(214,92,142,0) 65%); }
+.shot .hero { min-height: 0; }
+.hero__eyebrow { text-align: center; letter-spacing: .3em; opacity: .8; }
+.hero__grid { margin-top: 40px; display: grid; grid-template-columns: 440px 400px 400px; justify-content: center; gap: 40px; align-items: center; }
+/* 왼쪽 칸(제목 + D-day 배지 + 카운트다운): 포스터 높이(580)에 맞추되, 내용이 더 길면 칸이 늘어납니다. */
+.hero__left { min-height: 580px; display: flex; flex-direction: column; justify-content: space-between; }
+/* PC 3단(1281px~): 칸 맨 아래 D-day 배지의 그림자 · 기울기가 칸 밖으로 15px 쯤 나옵니다.
+   분홍 띠가 칸 바로 밑에 붙어 있어, 높이가 낮은 노트북(13인치 1366~1536 × ~768)에서 배지가 띠를 덮었습니다. 띄워 둡니다.
+   (폰 · 태블릿은 배치가 달라 해당 없음 — 폰의 띠 위 간격 8px 은 mobile.css) */
+@media (min-width: 1281px) { .hero__grid { margin-bottom: 48px; } }
+.hero__headline { display: flex; flex-direction: column; align-items: flex-end; gap: 16px; text-align: right; }
+.hero__poster { position: relative; }
+.hero__poster-frame { box-shadow: 0 40px 100px rgba(214,92,142,.55), 0 0 0 6px var(--paper); transform-style: preserve-3d; will-change: transform; }
+.hero__poster-frame img { width: 100%; }
+.hero__tonight { position: absolute; right: -60px; top: -26px; font-size: var(--fs-lead); letter-spacing: .16em; padding: 8px 18px; background: rgba(14,11,12,.7); transform: rotate(6deg); }
+.hero__right { display: flex; flex-direction: column; gap: 20px; align-items: flex-start; }
+.hero__date { display: flex; flex-direction: column; gap: 4px; }
+.hero__weekday { font-size: var(--fs-lead); letter-spacing: .1em; }
+.hero__venue { display: inline-block; background: var(--mint); color: var(--ink); font-size: var(--fs-lead); line-height: 1.2; padding: 6px 18px; transform: rotate(-1deg); box-shadow: 4px 4px 0 var(--paper); }   /* 다른 스티커(TICKET · 티켓 예매)처럼 흰 종이를 한 장 깔아 줌 */
+/* 장소와 무대 시간표는 한 덩어리입니다. 스티커가 혼자 떨어져 있으면 붕 뜹니다. */
+.hero__when { display: flex; flex-direction: column; align-items: flex-start; gap: 13px; }
+/* 히어로 무대 시간표 — 1부·2부·3부를 한 줄씩.
+   칸을 그리면 카드가 되어 버립니다. 빈 바탕에 글씨만 놓습니다. */
+.hero__stages { display: flex; flex-direction: column; gap: 9px; align-items: flex-start; }
+.hero__stages span {
+  display: inline-flex; align-items: baseline; gap: 12px;
+  font-size: var(--fs-body); letter-spacing: .08em;
+}
+.hero__stages b { font-weight: 400; color: var(--mint); min-width: 3.1em; }
+/* 히어로 버튼 한 쌍. 둘은 같은 폭(긴 쪽 글자에 맞춤)이고 글자 둘레 여백도 같습니다.
+   예전엔 폭을 칸에 맞춰 늘려서 '티켓 예매' 양옆이 글자 세 개만큼 비었습니다(폰 3.1em, 1280px 은 5.7em).
+   여백을 글자 크기에 묶어 두어(좌우 1.3em, 높이는 글자의 약 2.8배) 화면이 바뀌어도 비율이 같습니다.
+   주 버튼은 넓이가 아니라 분홍 바탕과 그림자로 앞에 섭니다. */
+.hero__cta {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 12px;
+  width: max-content; max-width: 100%; margin-top: 6px;
+}
+.hero__cta .btn { font-size: var(--fs-body); padding: .62em 1.3em; }
+/* 오른쪽 칸이 둘을 나란히 못 담는 폭(1025~1279px, 칸 241~360px)에서는 같은 폭 그대로 위아래로 */
+@media (min-width: 1025px) and (max-width: 1279px) { .hero__cta { grid-auto-flow: row; } }
+/* 보조 버튼은 테두리를 한 단 눅여 주 버튼이 먼저 보이게. 손을 대면 또렷해집니다. */
+.hero__cta .btn--ghost { border-color: rgba(241,234,226,.55); }
+.hero__cta .btn--ghost:hover { border-color: var(--paper); }
+.hero__caption { opacity: .75; }
+
+/* 카운트다운 F2 */
+.countdown { display: flex; align-items: center; gap: 22px; }
+.badge { position: relative; width: 190px; height: 190px; flex: 0 0 auto; transform: rotate(-8deg); }
+.badge__disc { position: absolute; inset: 0; border-radius: 50%; background: var(--pink); border: 4px solid var(--ink); box-shadow: 0 0 0 5px var(--paper), 10px 10px 0 5px var(--ink); }
+.badge__rim { position: absolute; inset: 0; width: 100%; height: 100%; }
+.badge__rim text { font-family: var(--font-display); font-size: 13px; fill: var(--ink); }
+.badge__center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.badge__d { font-size: var(--fs-badge); line-height: .9; color: var(--ink); }
+.badge__l { font-size: var(--fs-label); letter-spacing: .26em; color: var(--paper); }
+.countdown__nums { display: flex; flex-direction: column; gap: 10px; }
+.countdown__label { opacity: .8; }
+.countdown__row { display: flex; align-items: flex-end; gap: 12px; }
+.cu { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.cv { font-size: var(--fs-count); line-height: 1; font-variant-numeric: tabular-nums; }
+.cl { font-size: var(--fs-label); letter-spacing: .22em; color: var(--pink); }
+.cc { font-size: var(--fs-count); line-height: 1; opacity: .35; padding-bottom: 24px; }
+.countdown.is-live .badge__disc { background: var(--mint); }
+
+/* 티커 */
+.ticker { margin-top: auto; height: 56px; background: var(--pink); display: flex; align-items: center; z-index: 3; }
+.ticker__track { font-size: var(--fs-lead); letter-spacing: .1em; color: var(--ink); }
+.ticker__track span { padding-right: 40px; }
+
+/* ---------- 공통 섹션 헤더 ---------- */
+.sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.sec-head__left { display: flex; align-items: center; gap: 24px; }
+.sec-head__left--col { flex-direction: column; align-items: flex-start; gap: 14px; }
+.sec-head--center { flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+
+/* ---------- INFO ---------- */
+.info { padding: var(--sec-pad) 0; background: var(--ink-2); }
+.ticket { margin-top: 40px; display: flex; background: var(--paper); color: var(--ink); border: 3px solid var(--ink); box-shadow: 12px 12px 0 var(--pink); transform: rotate(-0.4deg); }
+.ticket__main { flex: 1 1 0; padding: 36px 44px; display: flex; flex-direction: column; gap: 28px; border-right: 3px dashed var(--ink); }
+.ticket__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 40px; }
+.ticket__grid > div { display: flex; flex-direction: column; gap: 6px; }
+.ticket__grid dd { font-size: var(--fs-h3); line-height: 1.1; }
+.ticket__grid dd small { font-size: var(--fs-label); letter-spacing: .12em; opacity: .7; }
+.ticket__addr { font-size: var(--fs-lead); font-weight: 700; line-height: 1.4; }
+.ticket__stages { display: flex; gap: 12px; flex-wrap: wrap; }
+.ticket__stages span { background: var(--ink); color: var(--paper); font-size: var(--fs-body); letter-spacing: .1em; padding: 10px 18px; }
+/* 한 매 = 한 부. 무대 시간 칩 바로 밑에 붙여 '이 셋 중 한 부' 로 읽히게 합니다 (예매 화면의 .onepart 와 같은 옷) */
+.ticket__rule { margin-top: -14px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.ticket__rule-en {
+  font-size: var(--fs-label); line-height: 1.2; letter-spacing: .08em; word-spacing: -.14em;
+  padding: 4px 10px; background: var(--pink); color: var(--ink); transform: rotate(-1.5deg);
+}
+.ticket__rule-ko {
+  font-family: var(--font-ko-display); font-weight: 700;
+  font-size: var(--fs-lead); line-height: 1.3; letter-spacing: -.01em; word-break: keep-all;
+}
+.ticket__rule em {
+  font-style: normal; padding: 0 2px;
+  background: linear-gradient(transparent 58%, rgba(214,92,142,.6) 58%, rgba(214,92,142,.6) 94%, transparent 94%);
+}
+@media (max-width: 640px) { .ticket__rule { margin-top: -4px; } }
+.ticket__stub { position: relative; width: 360px; background: var(--pink); padding: 32px 34px 26px; display: flex; flex-direction: column; justify-content: space-between; gap: 20px; }
+.ticket__stub > div { display: flex; flex-direction: column; gap: 6px; }
+.ticket__price { color: var(--paper); text-shadow: 4px 4px 0 var(--ink); }
+.ticket__perk { margin-top: 8px; }
+/* 번호는 CSS 가 셉니다. HTML 에 숫자를 적어두면 목록 기본 번호와 겹쳐 보일 수 있습니다 */
+.ticket__steps {
+  margin: auto 0 0; padding: 22px 0 0; list-style: none;
+  border-top: 3px dashed rgba(14,11,12,.28);
+  display: grid; gap: 12px; counter-reset: ifstep;
+}
+.ticket__steps li {
+  counter-increment: ifstep;
+  display: flex; align-items: baseline; gap: 14px;
+  font-size: var(--fs-body); line-height: 1.5;
+}
+.ticket__steps li::before {
+  content: counter(ifstep);
+  flex: none; width: 30px; height: 30px; display: grid; place-items: center;
+  font-family: var(--font-display); font-size: var(--fs-label);
+  background: var(--ink); color: var(--paper); border-radius: 50%;
+  transform: translateY(4px);
+}
+.ticket__steps > li > span { min-width: 0; }
+.ticket__steps em { font-style: normal; font-weight: 700; }
+
+.ticket__buy {
+  margin-top: 14px; width: 100%; background: var(--paper); color: var(--ink);
+  border-color: var(--ink); box-shadow: 6px 6px 0 var(--ink); font-size: var(--fs-h3);
+}
+.ticket__buy:hover { box-shadow: 8px 8px 0 var(--ink); }
+.ticket__how { font-size: var(--fs-label); opacity: .85; line-height: 1.5; margin-top: 2px; white-space: pre-line; }
+.barcode { color: var(--ink); max-width: 100%; } /* 320px 폰에서 내용 칸(245px)보다 넓던 것 */
+/* ADMIT ONE — 조각 오른쪽 가장자리에 따로 비워 둔 띠(오른쪽 안쪽 여백) 안에 세웁니다.
+   예전엔 가로 글자를 -90도 돌려 어림 좌표에 놓아서, 글꼴 폭에 따라 띠 위치가 움직이고
+   '사전 예매' 딱지 · 안내문과 겹쳤습니다. 세로쓰기는 글자 길이와 상관없이 오른쪽 14px 에 붙습니다.
+   이 띠는 1025px 이상에서만 보입니다(그 아래는 조각이 아래로 내려가며 숨김). */
+.ticket__admit {
+  position: absolute; right: 14px; top: 50%;
+  writing-mode: vertical-rl; transform: translateY(-50%) rotate(180deg);
+  font-size: var(--fs-label); line-height: 1; letter-spacing: .3em; white-space: nowrap; opacity: .7;
+}
+@media (min-width: 1025px) { .ticket__stub { padding-right: 46px; } }
+.info__actions { margin-top: 44px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.info__hint { opacity: .7; margin-left: 10px; }
+
+/* ---------- SETLIST ---------- */
+.setlist { padding: var(--sec-pad) 0; background: var(--ink); overflow: hidden; }
+.setlist__glow { position: absolute; left: 50%; top: -260px; width: 900px; height: 700px; margin-left: -450px; border-radius: 50%; background: radial-gradient(circle, rgba(214,92,142,.25) 0%, rgba(214,92,142,0) 65%); pointer-events: none; }
+.setlist__tabs { margin-top: 32px; display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
+.tab { font-family: var(--font-display); font-size: var(--fs-lead); letter-spacing: .12em; padding: 8px 22px; background: rgba(241,234,226,.85); color: var(--ink); transition: transform .2s var(--ease-out); }
+.tab:nth-child(1) { transform: rotate(-1.5deg); } .tab:nth-child(2) { transform: rotate(1deg); } .tab:nth-child(3) { transform: rotate(-0.6deg); }
+.tab[aria-selected="true"] { background: var(--pink); box-shadow: 4px 4px 0 var(--paper); }
+.tab small { display: none; }
+.setlist__list { margin-top: 26px; display: flex; flex-direction: column; }
+.song { display: flex; align-items: center; gap: 28px; min-height: 68px; border-bottom: 1px dashed rgba(241,234,226,.3); cursor: pointer; }
+.song:last-child { border-bottom: 0; }
+.song__num { width: 56px; font-size: var(--fs-h3); color: var(--pink); }
+.song__meta { flex: 1 1 0; min-width: 0; display: flex; align-items: baseline; gap: 28px; }
+.song__artist { flex: 0 0 200px; width: 200px; font-family: var(--font-ko-display); font-weight: 700; font-size: var(--fs-h3); line-height: 1.2; color: var(--mint); }
+.song__title { flex: 1 1 0; font-family: var(--font-ko-display); font-weight: 900; font-size: var(--fs-h3); line-height: 1.2; }
+.song__action { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: var(--fs-label); letter-spacing: .16em; opacity: .75; }
+.song.is-now { background: var(--pink); color: var(--ink); margin: 0 -28px; padding: 0 28px; border-bottom: 0; box-shadow: 0 0 24px rgba(255,79,163,.55); }
+.song.is-now .song__num, .song.is-now .song__artist { color: var(--ink); }
+.song.is-now .song__action { opacity: 1; }
+.setlist__note { margin-top: 24px; font-size: var(--fs-label); font-family: var(--font-body); letter-spacing: 0; opacity: .6; white-space: pre-line; }
+
+/* ---------- NOTICE ---------- */
+.notice { padding: var(--sec-pad) 0; background: var(--pink); color: var(--ink); }
+.notice .t-display, .notice .t-h2 { color: var(--ink); }
+.notice__body { margin-top: 36px; display: flex; gap: 40px; align-items: flex-start; }
+.notice__left { width: 820px; display: flex; flex-direction: column; gap: 26px; }
+.notice__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.ncard { display: flex; gap: 20px; }
+.ncard:nth-child(1) { transform: rotate(-0.8deg); } .ncard:nth-child(2) { transform: rotate(0.8deg); } .ncard:nth-child(3) { transform: rotate(0.5deg); } .ncard:nth-child(4) { transform: rotate(-0.6deg); }
+.ncard:nth-child(5) { transform: rotate(0.7deg); }
+/* 온라인 예매 안내는 가장 먼저 읽혀야 하므로 한 줄을 다 씁니다 */
+#notice-online { grid-column: 1 / -1; }
+.ncard svg { flex: 0 0 auto; width: 72px; height: 72px; }
+.ncard__body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+/* 한글 제목이 먼저 읽히고, 영문은 그 아래 작은 꼬리표로 물러납니다 */
+.ncard__title {
+  font-family: var(--font-ko-display); font-weight: 700; font-size: var(--fs-h3);
+  line-height: 1.2; letter-spacing: -.015em; color: var(--ink);
+}
+.ncard__en {
+  font-family: var(--font-display); font-size: var(--fs-label);
+  letter-spacing: .12em; line-height: 1.2;
+}
+.ncard__body p {
+  margin-top: 6px; font-size: var(--fs-body); line-height: 1.75;
+  color: rgba(14,11,12,.86); white-space: pre-line;
+}
+/* 신분증 (2026-10-27): 맨 앞 카드는 한 줄을 다 쓰고, 오른쪽 위에 MUST 꼬리표.
+   두 번째 도장은 첫 도장과 반대로 기울여 엇갈리게 찍습니다. */
+#notice-idcard { grid-column: 1 / -1; }
+.ncard:nth-child(6) { transform: rotate(-0.5deg); }
+.ncard { position: relative; }
+.ncard__tag {
+  position: absolute; top: -14px; right: 16px;
+  padding: 4px 10px; font-size: 14px; line-height: 1.2; letter-spacing: .12em;
+  background: var(--mint); color: var(--ink); border: 2px solid var(--ink);
+  transform: rotate(2deg);
+}
+.ncard__body p b { font-weight: 700; color: var(--ink); }
+.notice__banner-wrap { flex-direction: column; align-items: center; gap: 18px; }
+.notice__banner-wrap .stamp:not(.stamp--id) { margin-right: clamp(24px, 9vw, 150px); }
+.stamp.stamp--id { transform: rotate(3deg); margin-left: clamp(24px, 9vw, 150px); }
+.stamp__ic { display: inline-block; width: .95em; height: .95em; margin-right: .25em; vertical-align: -.12em; }
+/* 안내 글의 [오른쪽|아래] — 연락처 칸이 아래로 내려가는 폭(1024px 이하)에서 말이 바뀝니다 (notice.js) */
+.dir-narrow { display: none; }
+@media (max-width: 1024px) { .dir-wide { display: none; } .dir-narrow { display: inline; } }
+.notice__banner-wrap { display: flex; justify-content: center; }
+/* 도장은 종이가 아니라 자국입니다. 바탕도 그림자도 없이 잉크만 찍습니다.
+   분홍 위에 찍히므로 잉크는 진하게 갑니다 — 밝은 빨강은 분홍에 묻혀 안 읽힙니다. */
+.stamp {
+  display: inline-flex; flex-direction: column; align-items: center; gap: 3px;
+  border: 4px double #5E0A0D; color: #5E0A0D;
+  padding: 13px 30px 11px; transform: rotate(-5deg);
+  background: transparent; box-shadow: none;
+}
+.stamp__text { font-size: var(--fs-h2); line-height: 1; }
+.stamp__sub { font-size: var(--fs-label); letter-spacing: .3em; }
+.notice__contact { flex: 1 1 0; display: flex; flex-direction: column; gap: 22px; padding: 30px 32px; transform: rotate(0.6deg); }
+.notice__contact-title { font-size: var(--fs-h3); letter-spacing: .1em; }
+.notice__intro { font-size: var(--fs-body); line-height: 1.6; margin-top: 10px; }
+.contact__list { display: flex; flex-direction: column; gap: 16px; border-top: 2px dashed var(--ink); padding-top: 20px; }
+.contact { display: flex; flex-direction: column; gap: 10px; }
+.contact + .contact { border-top: 1px dashed rgba(14,11,12,.4); padding-top: 16px; }
+.contact__who { display: flex; align-items: center; gap: 10px; }
+.contact__role { font-family: var(--font-display); font-size: var(--fs-label); letter-spacing: .16em; padding: 3px 10px; color: var(--ink); }
+.contact__name { font-family: var(--font-ko-display); font-weight: 700; font-size: var(--fs-lead); }
+.contact__row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.contact__phone { font-family: var(--font-display); font-size: var(--fs-h3); letter-spacing: .04em; }
+.contact__btns { display: flex; gap: 8px; }
+.sbtn { display: inline-flex; align-items: center; gap: 8px; border: 2px solid var(--ink); background: var(--white); padding: 8px 14px; font-size: var(--fs-label); font-weight: 700; color: var(--ink); }
+/* 가격 한 줄. 가운데 정렬하면 줄이 바뀔 때마다 들쭉날쭉해 보입니다 */
+.notice__ticketline {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  background: var(--ink); color: var(--paper); padding: 14px 18px;
+  font-size: var(--fs-body); text-align: left;
+}
+.notice__ticketline .t-label { color: var(--pink); flex: none; }
+.notice__ticketline b { font-weight: 700; }
+
+/* ---------- SPONSOR ---------- */
+.sponsor { padding: var(--sec-pad) 0; background: var(--ink-2); overflow: hidden; }
+.sponsor__glow { position: absolute; left: 50%; top: 120px; width: 800px; height: 500px; margin-left: -400px; border-radius: 50%; background: radial-gradient(ellipse, rgba(214,92,142,.16) 0%, rgba(214,92,142,0) 70%); pointer-events: none; }
+.sponsor__tape { font-size: var(--fs-h2); letter-spacing: .08em; line-height: 1; padding: 10px 28px 8px; transform: rotate(-2deg); box-shadow: 6px 6px 0 var(--paper); }
+.marquee { position: relative; z-index: 2; margin-top: 44px; padding: 8px 0; }
+.marquee + .marquee { margin-top: 14px; }
+.marquee__track { gap: 18px; padding-right: 18px; }
+.chip { display: inline-flex; align-items: center; gap: 10px; background: var(--paper); color: var(--ink); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--pink); padding: 12px 24px; font-size: var(--fs-lead); white-space: nowrap; transition: transform .2s var(--ease-out); }
+.chip:hover { transform: translateY(-4px) rotate(0deg) !important; }
+.marquee__track--r .chip { box-shadow: 4px 4px 0 var(--mint); }
+.chip--식당 { box-shadow: 4px 4px 0 var(--pink); } .chip--주점 { box-shadow: 4px 4px 0 var(--mint); } .chip--노래방 { box-shadow: 4px 4px 0 var(--paper); } .chip--카페 { box-shadow: 4px 4px 0 var(--mint); }
+.sponsor__tiers { margin-top: 40px; }
+.sponsor__more { margin-top: 26px; display: flex; justify-content: center; }
+.sponsor__note { position: relative; z-index: 2; margin-top: 36px; text-align: center; font-size: var(--fs-label); opacity: .6; padding: 0 var(--gutter); }
+
+/* ---------- FOOTER ---------- */
+.footer { padding: 60px 0 36px; background: var(--ink-3); border-top: 1px solid rgba(241,234,226,.18); }
+.footer__grid { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; flex-wrap: wrap; }
+.footer__brand { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+.footer__logo { height: 150px; width: auto; filter: invert(1) brightness(1.05); transform: rotate(-3deg); }
+.footer__slogan { font-size: var(--fs-body); letter-spacing: .26em; }
+.footer__info { display: flex; flex-direction: column; gap: 12px; }
+.footer__if { font-size: var(--fs-h2); line-height: 1; }
+.footer__dim { opacity: .7; }
+.footer__insta { display: inline-flex; align-items: center; gap: 10px; margin-top: 12px; font-size: var(--fs-lead); letter-spacing: .06em; }
+.footer__share { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+.share { display: inline-flex; align-items: center; gap: 10px; border: 2px solid var(--paper); color: var(--paper); padding: 12px 20px; font-size: var(--fs-body); min-width: 230px; }
+.share:hover { background: var(--paper); color: var(--ink); }
+.footer__bottom { margin-top: 40px; border-top: 1px dashed rgba(241,234,226,.35); padding-top: 18px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: var(--fs-label); letter-spacing: .18em; opacity: .7; }
+/* 방문 통계 안내 한 줄. 맨 아래 글씨와 같은 크기 */
+.footer__privacy { margin-top: 12px; font-size: var(--fs-label); line-height: 1.6; opacity: .7; }
+
+/* ============ 태블릿 ============ */
+@media (max-width: 1280px) {
+  .hero__grid { grid-template-columns: minmax(0, 1fr) 360px minmax(0, 1fr); gap: 32px; }
+  .hero__left { height: auto; gap: 40px; }
+  .countdown { flex-wrap: wrap; }
+  .notice__left { width: auto; flex: 1.6 1 0; }
+}
+
+@media (max-width: 1024px) {
+  .nav__menu { display: none; }
+  .nav__burger { display: inline-flex; }
+  .nav { grid-template-columns: auto 1fr; }
+  .nav__right { grid-column: 2; }
+  .hero__grid { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .hero__left { order: 2; width: 100%; align-items: center; }
+  .hero__headline { align-items: center; text-align: center; }
+  .hero__poster { order: 1; width: min(360px, 80vw); }
+  .br-desktop { display: none; }
+  .hero__right { order: 3; align-items: center; }
+  .countdown { justify-content: center; }
+  .ticket { flex-direction: column; }
+  .ticket__main { border-right: 0; border-bottom: 3px dashed var(--ink); }
+  .ticket__stub { width: auto; }
+  .ticket__admit { display: none; }
+  .notice__body { flex-direction: column; }
+  .notice__left { width: auto; }
+  .song__artist { width: 160px; }
+}
+
+/* ============ 모바일 ============ */
+@media (max-width: 640px) {
+  .nav { padding: 0 var(--gutter); }
+  .nav__logo img { height: 38px; }
+  .nav__ticket { font-size: var(--fs-body); padding: 8px 14px; }
+  .hero { padding-top: 26px; }
+  .hero__grid { margin-top: 16px; gap: 20px; }
+  .hero__poster { width: 240px; }
+  .hero__tonight { right: -40px; top: -18px; padding: 6px 12px; }
+  .badge { width: 110px; height: 110px; }
+  .badge__rim { display: none; }
+  /* --fs-badge 가 토큰에서 줄어듦 */
+  .badge__l { display: none; }
+
+  /* --fs-count 가 토큰에서 줄어듦 */
+  .cl { letter-spacing: .1em; }
+  .countdown__row { gap: 8px; }
+  .cc { padding-bottom: 20px; }
+  .countdown { gap: 12px; }
+  .sec-head__right { width: 100%; }
+  .ticker { height: 44px; }
+  .ticker__track { font-size: var(--fs-body); }
+  .ticket { box-shadow: 8px 8px 0 var(--pink); }
+  .ticket__main { padding: 20px; gap: 16px; }
+  .ticket__grid { gap: 14px; }
+  .ticket__grid > div:nth-child(n+3) { grid-column: 1 / -1; }
+  .ticket__stages span { font-size: var(--fs-label); padding: 7px 10px; }
+  .ticket__stub { padding: 18px 20px; }
+  .info__actions .btn { flex: 1 1 0; font-size: var(--fs-body); padding: 12px 0; }
+  .info__hint { display: none; }
+  .setlist__tabs { gap: 10px; flex-wrap: nowrap; }
+  .tab { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 0; font-size: var(--fs-body); }
+  .tab small { display: block; font-size: var(--fs-label); letter-spacing: .04em; }
+  .tab .tab__time { display: none; }
+  .song { gap: 12px; min-height: 60px; }
+  .song__num { width: 40px; font-size: var(--fs-h3); }
+  .song__meta { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .song__artist { flex: 0 0 auto; width: auto; font-size: var(--fs-body); }
+  .song__title { font-size: var(--fs-h3); }
+  .song__action span { display: none; }
+  .song.is-now { margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter); }
+  .notice__grid { grid-template-columns: 1fr; gap: 16px; }
+  .ncard { gap: 14px; padding: 18px; }
+  .ncard svg { width: 56px; height: 56px; }
+  .stamp { padding: 8px 18px 6px; }
+  .notice__contact { padding: 20px 18px; }
+  .contact__btns { width: 100%; }
+  .contact__btns .sbtn { flex: 1 1 0; justify-content: center; padding: 11px 0; }
+  .marquee { margin-top: 30px; }
+  .chip { padding: 9px 16px; font-size: var(--fs-body); }
+  /* 맨 끝까지 내렸을 때 마지막 줄이 오른쪽 아래 '위로' 버튼(48px, 바닥에서 16px)에 가리지 않을 만큼 */
+  .footer { padding: 40px 0 calc(76px + env(safe-area-inset-bottom)); }
+  .footer__logo { height: 110px; }
+  /* 공유 단추: 'SHARE' 는 위에 한 줄, 단추 둘은 나란히. 폭이 좁거나 폰 글자 크기를 키워서 한 줄에 안 들어가면
+     글자를 두 줄로 접는 대신 단추가 한 줄씩 내려갑니다. (예전엔 '친구에게 공유' 만 접혀 상자 높이가 서로 달라졌음) */
+  .footer__share { width: 100%; flex-direction: row; flex-wrap: wrap; align-items: stretch; gap: 10px; }
+  .footer__share > .t-label { flex: 0 0 100%; }
+  .share { flex: 1 1 140px; min-width: auto; justify-content: center; padding: 12px 10px; gap: 8px; white-space: nowrap; font-size: var(--fs-body); }
+  .footer__bottom { flex-direction: column; gap: 4px; }
+}

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>TICKET GACHA · I.F 2026 LIVE PERFORMANCE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Share+Tech+Mono&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/gacha.css">
+  <script type="module" src="js/gacha-board.js"></script>
+</head>
+<body class="gxb" data-mode="idle">
+  <main class="gxb__board">
+    <div class="gxgrid gxb__grid" id="gbGrid" hidden></div>
+    <p class="gxb__empty" id="gbEmpty">아직 들어온 번호가 없습니다</p>
+  </main>
+  <aside class="gxb__side">
+    <div class="gxneon">TICKET GACHA</div>
+
+    <div class="gxb__idle">
+      <h1 class="gxb__t">티켓 번호를<br>넣어 주세요</h1>
+      <p class="gxb__url">ifband.kro.kr/ticket</p>
+      <p class="gxb__n"><b id="gbCount">0</b><span>개 참여 중</span></p>
+      <p class="gxb__past" id="gbPast" hidden></p>
+    </div>
+
+    <div class="gxb__run">
+      <p class="gxb__say" id="gbSay" aria-live="polite"></p>
+      <p class="gxb__left"><b id="gbLeft"></b><span id="gbLeftUnit"></span></p>
+    </div>
+
+    <div class="gxb__result">
+      <p class="gxb__wl">당첨 번호</p>
+      <p class="gxb__win" id="gbWin"></p>
+      <p class="gxb__ws">이 번호가 적힌 티켓을 들고 무대 앞으로 와 주세요</p>
+    </div>
+
+    <p class="gxb__off" id="gbOff" hidden>서버에 다시 연결하는 중입니다</p>
+    <button class="gxb__full" id="gbFull" type="button">전체 화면</button>
+  </aside>
+</body>
+</html>

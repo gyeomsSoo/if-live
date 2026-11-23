@@ -1,0 +1,103 @@
+/* ============================================================
+   interact.css — js/interact.js 가 거는 반응들
+   맨 마지막에 실리므로 여기서 덮어씁니다.
+   ============================================================ */
+
+/* ---------- 카드 기울기 ----------
+   마우스가 놓인 쪽으로 카드가 입체로 기웁니다.
+   기존의 '살짝 떠오르는' 호버는 이 안으로 합쳐 넣습니다 (transform 은 하나뿐이라).
+
+   기울기 값은 js 가 카드의 transform 에 직접 씁니다. 쉬고 있을 때는 아무 변형도 걸지 않습니다.
+   예전엔 쉬는 카드에도 perspective() 가 걸려 있어 카드마다(데스크탑 30장 넘게) GPU 레이어가 따로 생겼고,
+   그 위에 겹친 요소들까지 덩달아 레이어가 되어 매 프레임 레이어 정리에 시간을 많이 썼습니다.
+   preserve-3d 도 뺐습니다. 카드 안에 입체로 움직이는 자식이 없어서 그림은 같고, 자식들이 따로 레이어가 되지 않습니다. */
+.tilt {
+  transition: transform .16s var(--ease-out), box-shadow .2s var(--ease-out);
+}
+/* will-change 는 '곧 움직인다'고 미리 알리는 말입니다. 카드 서른 장에 늘 켜 두면
+   그래픽 메모리를 서른 장어치 붙들고 있습니다. 마우스가 올라간 한 장만 켭니다. */
+.tilt:hover { will-change: transform; }
+/* 마우스가 막 올라와 아직 움직이지 않았을 때의 모습 (움직이면 js 가 기울기를 더해 덮어씁니다) */
+.shop.tilt:hover,
+.sp--sign.tilt:hover { transform: translate3d(-3px, -4px, 0); }
+.ncard.tilt:hover,
+.tkcard.tilt:hover { transform: translate3d(0, -3px, 0); }
+/* 기울어진 면을 따라 빛이 한 번 스칩니다.
+   빛 자국은 js 가 카드 맨 앞에 끼우는 빈 요소입니다. 예전처럼 카드의 ::before 에 그리면 위치 값(--mx)을
+   카드에 줘야 하는데, CSS 변수는 자식에게 물려 내려가서 마우스가 한 칸 움직일 때마다
+   카드 안의 모든 요소(간판 그림의 도형 수백 개)를 다시 계산했습니다. */
+.tilt__shine {
+  position: absolute; inset: 0; z-index: 4; pointer-events: none;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255,255,255,.14) 0%, rgba(255,255,255,0) 68%);
+  opacity: 0; transition: opacity .25s ease-out;
+}
+.tilt:hover > .tilt__shine { opacity: 1; }
+
+/* ---------- 자석 버튼 ----------
+   평면 이동(translate)으로 씁니다. translate3d 는 쉬고 있는 단추마다 GPU 레이어를 하나씩 만들었습니다.
+   끌려오는 동안에는 전환(transition)이라 브라우저가 알아서 GPU 로 돌립니다. */
+.mag {
+  transform: translate(var(--mx, 0px), var(--my, 0px));
+  transition: transform .28s var(--ease-out);
+}
+/* 이미 기울여 붙여 둔 탭은 그 각도를 지키면서 끌려옵니다 */
+.tab.mag:nth-child(1) { transform: translate(var(--mx, 0px), var(--my, 0px)) rotate(-1.5deg); }
+.tab.mag:nth-child(2) { transform: translate(var(--mx, 0px), var(--my, 0px)) rotate(1deg); }
+.tab.mag:nth-child(3) { transform: translate(var(--mx, 0px), var(--my, 0px)) rotate(-0.6deg); }
+/* 자석이 걸린 버튼은 기존 호버 이동을 쓰지 않습니다 */
+.btn.mag:hover, .sbtn.mag:hover, .tab.mag:hover { transform: translate(var(--mx, 0px), var(--my, 0px)); }
+.tab.mag:nth-child(1):hover { transform: translate(var(--mx, 0px), var(--my, 0px)) rotate(-1.5deg); }
+.tab.mag:nth-child(2):hover { transform: translate(var(--mx, 0px), var(--my, 0px)) rotate(1deg); }
+.tab.mag:nth-child(3):hover { transform: translate(var(--mx, 0px), var(--my, 0px)) rotate(-0.6deg); }
+
+/* ---------- 흐름 잔상 ----------
+   js 가 filter 를 직접 얹습니다. (예전 js 가 함께 쓰던 늘어남 값 --mq-stretch 는 받는 곳이 없어 뺐습니다)
+   will-change 는 base.css 에 transform 으로 이미 적어 두었습니다 — 여기서 다시
+   적으면 값이 합쳐지지 않고 덮어써져서 정작 필요한 transform 힌트가 사라집니다. */
+
+/* ---------- 진행 막대 ---------- */
+.sprog {
+  position: fixed; left: 0; right: 0; top: 0; height: 3px;
+  z-index: 60; pointer-events: none;
+  background: rgba(241,234,226,.08);
+}
+.sprog i {
+  display: block; height: 100%; transform-origin: 0 50%; transform: scaleX(0);
+  background: linear-gradient(90deg, var(--pink) 0%, var(--mint) 100%);
+  box-shadow: 0 0 10px rgba(214,92,142,.6);
+}
+
+/* ---------- 바뀌는 제목 ----------
+   글자가 바뀌는 동안 커서가 글자를 집어 가지 않도록. */
+.sec-head .t-display, .sec-head .tape,
+.tkhead .t-display, .tkhead .tape,
+.sphead .t-display, .sphead .tape { -webkit-user-select: none; user-select: none; }
+
+/* ---------- 스티커가 탁 찍힙니다 (GSAP 없는 페이지용) ----------
+   크게 비뚤어진 채로 있다가 제자리에 앉습니다. 메인 페이지의 등장과 같은 모양입니다.
+   CSS 의 기울기(tape--mint 등)를 지우지 않도록 회전값을 함께 적어 줍니다. */
+.tape.stamp-in { opacity: 0; transform: rotate(-17deg) scale(1.55); }
+.tape.stamp-in.is-in {
+  opacity: 1; transform: rotate(-2deg) scale(1);
+  transition: opacity .3s ease-out, transform .66s cubic-bezier(.2,1.5,.4,1);
+}
+/* 분홍 스티커는 원래 기울어져 있지 않습니다 */
+.tape--pink.stamp-in.is-in { transform: rotate(0deg) scale(1); }
+
+/* ---------- 손가락 기기와 모션 감소 ---------- */
+@media (hover: none) {
+  .tilt { transform: none; }
+  .tilt__shine { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tilt, .mag { transform: none !important; transition: none !important; }
+  .sprog { display: none; }
+  .ticker__track, .marquee__track { filter: none !important; }
+}
+
+/* ---------- ?heat=1 : 관리 화면의 '누른 곳 지도' ----------
+   등장·흔들림 없이 모든 것이 제자리·제 모습으로 서 있어야 누른 점이 맞는 곳에 찍힙니다.
+   떠 있는 단추(맨 위로·진행 막대·미리보기 표시)는 지도를 가리므로 숨깁니다. */
+.heat *, .heat *::before, .heat *::after { animation: none !important; transition: none !important; }
+.heat .totop, .heat .sprog, .heat .peek { display: none !important; }

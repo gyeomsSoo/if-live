@@ -1,0 +1,107 @@
+/* ============================================================
+   poster.css — 포스터 크게 보기 (js/poster.js)
+   ============================================================ */
+
+.pv {
+  position: fixed; inset: 0; z-index: 80;
+  display: grid; place-items: center;
+  perspective: 1600px;
+}
+.pv[hidden] { display: none; }
+
+/* 주변은 천천히 어두워집니다. 포스터가 커지는 시간과 맞춥니다. */
+.pv__scrim {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 45%, rgba(20,14,20,.82) 0%, rgba(8,6,8,.96) 70%);
+  opacity: 0; transition: opacity .9s cubic-bezier(.22,1,.36,1);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+}
+.pv.is-open .pv__scrim { opacity: 1; }
+.pv.is-closing .pv__scrim { opacity: 0; transition-duration: .55s; }
+
+/* ---------- 카드 ---------- */
+.pv__card {
+  position: relative; z-index: 1;
+  transform-style: preserve-3d;
+  cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none;
+  will-change: transform;
+}
+.pv__card.is-held { cursor: grabbing; }
+
+/* 각도는 js 가 --rx / --ry 로 줍니다. 안쪽 면이 그 각도를 씁니다 */
+.pv__face {
+  position: absolute; inset: 0;
+  transform: rotateY(var(--ry, 0deg)) rotateX(var(--rx, 0deg));
+  transform-style: preserve-3d;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  border: 5px solid var(--paper);
+  box-shadow: 0 40px 90px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.4);
+  background: var(--ink);
+}
+.pv__face--back { transform: rotateY(calc(var(--ry, 0deg) + 180deg)) rotateX(var(--rx, 0deg)); }
+.pv__face--front img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* ---------- 표면을 지나는 빛 ----------
+   돌아간 각도(--sheen)에 따라 흰 띠가 표면을 훑고 지나갑니다. */
+.pv__sheen {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(102deg,
+    rgba(255,255,255,0) 38%, rgba(255,255,255,.42) 48%,
+    rgba(255,255,255,.62) 51%, rgba(255,255,255,.42) 54%, rgba(255,255,255,0) 64%);
+  background-size: 300% 100%;
+  background-position: calc(50% + var(--sheen, 0%)) 0;
+  mix-blend-mode: screen; opacity: .85;
+}
+
+/* ---------- 뒷면 ---------- */
+.pv__face--back {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; text-align: center; padding: 24px;
+  background:
+    repeating-linear-gradient(45deg, rgba(241,234,226,.045) 0 10px, rgba(241,234,226,0) 10px 20px),
+    linear-gradient(160deg, #1B1620 0%, #0E0B0C 60%);
+  color: var(--paper);
+}
+.pv__back-mark {
+  font-family: var(--font-display); font-size: clamp(56px, 18vw, 108px); line-height: .9;
+  letter-spacing: .04em; color: var(--pink);
+  text-shadow: 0 0 34px rgba(214,92,142,.55);
+}
+.pv__back-line { font-family: var(--font-display); font-size: clamp(12px, 3.4vw, 17px); letter-spacing: .22em; opacity: .8; }
+.pv__back-date { margin-top: 12px; font-family: var(--font-ko-display); font-weight: 900; font-size: clamp(20px, 6vw, 32px); }
+.pv__back-place { font-family: var(--font-ko); font-weight: 600; font-size: clamp(14px, 4vw, 19px); color: var(--mint); }
+.pv__back-since {
+  margin-top: 16px; font-family: var(--font-mono); font-size: clamp(11px, 3vw, 14px);
+  letter-spacing: .3em; opacity: .5;
+}
+
+/* ---------- 닫기와 안내 ---------- */
+.pv__x {
+  position: absolute; right: 14px; top: 12px; z-index: 3;
+  width: 46px; height: 46px; font-size: 30px; line-height: 1;
+  color: var(--paper); background: rgba(14,11,12,.5);
+  border: 2px solid rgba(241,234,226,.4); border-radius: 50%;
+  opacity: 0; transition: opacity .4s ease .35s;
+}
+.pv.is-open .pv__x { opacity: 1; }
+.pv.is-closing .pv__x { opacity: 0; transition-delay: 0s; }
+.pv__hint {
+  position: absolute; left: 0; right: 0; bottom: 18px; z-index: 3; margin: 0;
+  text-align: center; font-family: var(--font-ko); font-weight: 500;
+  font-size: var(--fs-label); color: rgba(241,234,226,.6);
+  opacity: 0; transition: opacity .4s ease .45s;
+}
+.pv.is-open .pv__hint { opacity: 1; }
+.pv.is-closing .pv__hint { opacity: 0; transition-delay: 0s; }
+
+@media (max-width: 640px) {
+  .pv__x { right: 10px; top: 8px; width: 42px; height: 42px; }
+  .pv__hint { bottom: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pv__scrim { transition: none; }
+  .pv__x, .pv__hint { transition: none; }
+  .pv__sheen { display: none; }
+}

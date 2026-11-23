@@ -1,0 +1,146 @@
+/* ============================================================
+   base: 리셋, 타입, 공용 부품
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+/* 부드러운 스크롤(Lenis)이 켜져 있으면 브라우저의 부드러운 이동은 끕니다 (Lenis 공식 안내).
+   둘이 겹치면 Lenis 가 매 프레임 옮길 때마다 브라우저가 그 위에 또 미끄러뜨려 한 박자 늦게 따라오고,
+   그사이 훑고 지나간 구역의 '화면에 들어오면' 연출이 보이지도 않는 곳에서 전부 깨어났습니다. */
+html.lenis { scroll-behavior: auto; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.7;
+  color: var(--paper);
+  background: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+  overflow-x: hidden;
+}
+img { max-width: 100%; height: auto; display: block; }
+[hidden] { display: none !important; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+h1, h2, h3, p, dl, dd, dt { margin: 0; }
+.skip { position: absolute; left: -999px; top: 8px; z-index: 100; background: var(--pink); color: var(--ink); padding: 8px 14px; }
+.skip:focus { left: 8px; }
+:focus-visible { outline: 3px solid var(--mint); outline-offset: 3px; }
+
+/* 타입 7단계 */
+.anton { font-family: var(--font-display); font-weight: 400; }
+.bhs { font-family: var(--font-ko-display); font-weight: 900; letter-spacing: -.01em; }
+.t-display { font-family: var(--font-display); font-size: var(--fs-display); line-height: .95; letter-spacing: .01em; }
+.t-num { font-family: var(--font-display); font-size: var(--fs-num); line-height: 1; }
+.t-h2 { font-family: var(--font-ko-display); font-weight: 900; letter-spacing: -.015em; font-size: var(--fs-h2); line-height: 1.15; }
+.t-h3 { font-family: var(--font-ko-display); font-weight: 900; letter-spacing: -.01em; font-size: var(--fs-h3); line-height: 1.25; }
+.t-lead { font-size: var(--fs-lead); line-height: 1.4; }
+.t-body { font-size: var(--fs-body); line-height: 1.7; }
+.t-label { font-family: var(--font-display); font-size: var(--fs-label); letter-spacing: .16em; line-height: 1.2; }
+.c-pink { color: var(--pink); }
+.c-mint { color: var(--mint); }
+.c-paper { color: var(--paper); }
+
+/* 레이아웃 */
+.wrap { width: min(var(--wrap), calc(100% - var(--gutter) * 2)); margin-inline: auto; position: relative; z-index: 2; }
+section, footer { position: relative; }
+
+/* 종이 질감
+   예전엔 검은 점 무늬를 '겹침(mix-blend-mode: overlay)' 으로 섞었습니다. 겹침은 GPU 가 아래 화면을 읽어 와
+   다시 섞어야 해서, 그 아래에서 무언가 움직이는 동안(띠 · 배지 · 조명) 매 프레임 구역 전체를 다시 합성했습니다.
+   어두운 바탕(밝기 50% 이하)에서는 검은 점의 겹침과 그냥 덮기가 수식상 똑같아서 그냥 덮습니다.
+   투명도(.35)는 무늬 안에 미리 곱해 두었습니다 (.5 × .35 = .175). 글과 카드는 .wrap(z-index 2)이라 무늬 위에 있습니다. */
+.grain::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.175 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* 분홍 바탕(NOTICE)은 밝아서 겹침과 덮기가 다릅니다. 분홍(#D65C8E) 위에서 겹침이 내던 색과 똑같은
+   진홍 점(R .678 · G 0 · B .114)으로 덮습니다. 같은 무늬 · 같은 농도입니다. */
+.notice.grain::before {
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.678 0 0 0 0 0 0 0 0 0 0.114 0 0 0 0.175 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* 부품: 테이프 라벨 */
+.tape { display: inline-block; padding: 6px 20px; letter-spacing: .16em; font-size: var(--fs-lead); line-height: 1.2; box-shadow: 4px 4px 0 var(--ink); color: var(--ink); }
+.tape--mint { background: var(--mint); transform: rotate(-2deg); }
+.tape--pink { background: var(--pink); }
+.tape--paper { background: rgba(241,234,226,.85); box-shadow: none; }
+
+/* 부품: 버튼 */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; white-space: nowrap; font-family: var(--font-ko-display); font-weight: 700; letter-spacing: 0; font-size: var(--fs-lead); line-height: 1.2; padding: 14px 24px; border: 3px solid var(--paper); transition: transform .18s var(--ease-out), box-shadow .18s var(--ease-out); }
+.btn:hover { transform: translate(-2px, -2px); }
+.btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 currentColor; }
+.btn--pink { background: var(--pink); color: var(--ink); box-shadow: 6px 6px 0 var(--paper); }
+.btn--ghost { background: transparent; color: var(--paper); }
+.btn--paper { background: var(--paper); color: var(--ink); border-color: var(--ink); box-shadow: 6px 6px 0 var(--pink); }
+
+/* 부품: 카드(종이) */
+.card { background: var(--paper); color: var(--ink); border: 3px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); padding: 26px; }
+
+/* 네온 포인트 (딱 3곳) */
+.glow-pink { color: var(--neon-text); text-shadow: 0 0 4px var(--white), 0 0 12px var(--neon-pink), 0 0 28px rgba(255,79,163,.8); }
+.tube-pink { border: 3px solid var(--neon-pink-2); border-radius: 14px; box-shadow: 0 0 8px var(--neon-pink), 0 0 22px rgba(255,79,163,.7), inset 0 0 10px rgba(255,79,163,.5); }
+.flicker { animation: flicker 6s infinite; }
+@keyframes flicker { 0%, 21%, 23%, 25%, 100% { opacity: 1; } 22%, 24% { opacity: .4; } }
+
+/* 회전 */
+.spin { animation: spin 24s linear infinite; transform-origin: 50% 50%; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 마키 */
+.ticker, .marquee { overflow: hidden; width: 100%; }
+.ticker__track, .marquee__track { display: inline-flex; white-space: nowrap; will-change: transform; }
+/* 화면에서 벗어나면 멈춥니다. 멈춘 자리에서 이어 흐르므로 티가 나지 않습니다.
+   (interact.js 가 붙였다 뗍니다) */
+.is-idle { animation-play-state: paused !important; will-change: auto !important; }
+.is-idle span { animation-play-state: paused !important; }
+/* 히어로가 화면 밖이면 배지 회전 · 포스터 둥실 · LIVE 깜빡임도 세워 둡니다.
+   GPU 가 돌리는 움직임이어도 브라우저는 매 프레임 스타일을 다시 계산하고 있었습니다. */
+.hero.is-idle *, .hero.is-idle *::before, .hero.is-idle *::after { animation-play-state: paused !important; }
+.ticker__track { animation: tick 26s linear infinite; }
+.marquee__track--l { animation: tick 40s linear infinite; }
+.marquee__track--r { animation: tickr 46s linear infinite; }
+@keyframes tick { to { transform: translateX(-50%); } }
+@keyframes tickr { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+/* 이퀄라이저 */
+.eq { display: inline-flex; gap: 3px; align-items: flex-end; height: 18px; }
+.eq span { display: inline-block; width: 4px; height: 18px; background: currentColor; transform-origin: bottom; animation: eq 1s ease-in-out infinite; }
+.eq span:nth-child(2) { animation-delay: .2s; } .eq span:nth-child(3) { animation-delay: .4s; }
+@keyframes eq { 0%, 100% { transform: scaleY(.25); } 50% { transform: scaleY(1); } }
+
+/* 토스트 */
+.toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 90; background: var(--paper); color: var(--ink); padding: 12px 22px; font-size: var(--fs-label); letter-spacing: .1em; box-shadow: 6px 6px 0 var(--pink); white-space: pre-line;
+  /* 글 길이만큼 넓게(화면보다는 좁게). 메인은 extras.css 가 같은 값을 주고, 예매·후원사 페이지는 여기서만 받습니다 */
+  width: max-content; max-width: calc(100% - 32px); text-align: center; }
+
+/* 자료를 못 받았거나 사이트가 못 떴을 때 손님 안내 (index.html IF_LOADFAIL) */
+.loadfail { position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 95; max-width: 440px; margin-inline: auto; display: grid; grid-template-columns: 1fr auto; gap: 12px 8px; align-items: start; padding: 16px 12px 16px 18px; background: var(--paper); color: var(--ink); box-shadow: 6px 6px 0 var(--pink); font-family: var(--font-body); font-size: var(--fs-label); line-height: 1.5; }
+.loadfail__msg { margin: 0; }
+.loadfail__msg b { display: block; font-weight: 700; }
+.loadfail__x { grid-column: 2; grid-row: 1; width: 44px; height: 44px; margin: -10px -4px 0 0; display: grid; place-items: center; background: none; border: 0; color: var(--ink); font: 400 28px/1 var(--font-body); cursor: pointer; }
+.loadfail__go { grid-column: 1; justify-self: start; min-height: 44px; padding: 0 18px; background: var(--ink); color: var(--paper); border: 0; font: 700 var(--fs-label)/1 var(--font-body); cursor: pointer; }
+
+/* 모달 */
+.modal { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; }
+.modal__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.7); }
+.modal__box { position: relative; width: min(560px, calc(100% - 32px)); background: var(--paper); color: var(--ink); border: 3px solid var(--ink); box-shadow: 10px 10px 0 var(--pink); padding: 28px; }
+.modal__close { position: absolute; right: 10px; top: 4px; font-size: var(--fs-h3); line-height: 1; }
+
+/* 모션 감소 */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .flicker, .spin, .ticker__track, .marquee__track, .eq span { animation: none !important; }
+  .marquee__track { flex-wrap: wrap; white-space: normal; }
+  .btn { transition: none; }
+}
+
+/* ---------- 줄바꿈 다듬기 ----------
+   붙어 다녀야 하는 말 덩어리(전화번호, '이름·연락처·IP는', 'SINCE 1992')는 통째로 다음 줄로 넘깁니다.
+   한글은 keep-all 이어도 가운뎃점(·)과 붙임표(-) 앞뒤에서 끊겨 '연락처 / ·IP는', '010- / 1234' 가 됐습니다. */
+.nw { white-space: nowrap; }
+/* 가운뎃점으로 이은 한 줄 정보. 좁은 폰에서는 정해 둔 점 자리에서 줄을 바꾸고 그 점은 지웁니다
+   — 줄 끝이나 줄 머리에 점이 매달리지 않게. (375px 폰에서 한 줄 여유가 4px 뿐이라 380 으로 잡았습니다) */
+@media (max-width: 380px) {
+  .dot-br { display: block; height: 0; overflow: hidden; }
+}

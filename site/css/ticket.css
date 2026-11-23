@@ -1,0 +1,463 @@
+/* ============================================================
+   ticket.css — 온라인 예매 / 마이티켓
+   base.css 의 부품(.card .btn .tape .t-*)을 그대로 씁니다.
+   ============================================================ */
+
+/* 예매 화면의 한글은 제목·단추까지 전부 프리텐다드로 씁니다 (2026-10-10).
+   이름·매수·금액을 또박또박 확인하는 화면이라 읽기 쉬운 쪽을 골랐습니다.
+   영문 대제목(Anton)과 숫자(Share Tech Mono)는 그대로 둡니다.
+   자이언츠체에 맞춰 900 을 적었던 자리는 프리텐다드에선 너무 검어서 800 으로 씁니다. */
+:root { --font-ko-display: var(--font-ko); }
+.t-h2, .t-h3, .bhs { font-weight: 800; }
+
+.tkbody { background: var(--ink); min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ---------------- 상단 ---------------- */
+.tknav {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 10px var(--gutter);
+  background: rgba(14,11,12,.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(241,234,226,.14);
+}
+.tknav__logo {
+  background: var(--paper); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--pink);
+  padding: 2px 10px; transform: rotate(-4deg);
+}
+.tknav__logo img { height: 40px; width: auto; }
+.tknav__home { font-size: var(--fs-label); letter-spacing: .18em; padding: 8px 14px; border: 2px solid rgba(241,234,226,.35); }
+.tknav__home:hover { border-color: var(--paper); }
+
+/* ---------------- 본문 ---------------- */
+.tkmain { flex: 1; padding: 40px 0 90px; }
+
+.tkhead { text-align: center; margin-bottom: 36px; }
+/* 메인 페이지의 구역들처럼 큰 영문 제목이 먼저 오고, 한글이 그 아래에 옵니다.
+   이 줄이 없으면 티켓 페이지만 목소리가 작아 따로 노는 것처럼 보입니다. */
+.tkhead__en { margin: 14px 0 0; line-height: 1; color: var(--paper); }
+.tkhead__title { margin-top: 4px; color: var(--pink); }
+.tkhead__sub { margin-top: 10px; color: rgba(241,234,226,.78); }
+.tkhead__sub b { color: var(--paper); }
+.tkhead__meta {
+  margin-top: 14px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+  gap: 10px; font-size: var(--fs-label); letter-spacing: .14em; color: var(--pink);
+}
+.tkhead__meta i { width: 4px; height: 4px; background: currentColor; border-radius: 50%; }
+
+/* 상태 화면 */
+.tkstate { text-align: center; padding: 60px 0; color: rgba(241,234,226,.78); }
+.tkstate .eq { color: var(--pink); margin-bottom: 14px; }
+.tkstate h2 { color: var(--paper); margin-bottom: 8px; }
+.tkstate__btns { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 18px; }
+
+/* ---------------- 두 칸 배치 ---------------- */
+.tkgrid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 26px; align-items: start; }
+.tkgrid--one { grid-template-columns: minmax(0, 1fr) minmax(0, .8fr); }
+.tkside { display: grid; gap: 26px; }
+
+.tkcard { display: grid; gap: 14px; align-content: start; }
+.tkcard__title { margin: 0; }
+.tkcard__lead { font-size: var(--fs-body); line-height: 1.65; color: rgba(14,11,12,.78); margin: -6px 0 0; }
+.tkcard__note { font-size: var(--fs-label); line-height: 1.6; color: rgba(14,11,12,.66); margin: 0; }
+.tkcard__fine { font-size: var(--fs-label); line-height: 1.6; color: rgba(14,11,12,.6); margin: 0; text-align: center; }
+.tkcard__perk {
+  margin: 0; font-family: var(--font-ko-display); font-weight: 800;
+  font-size: var(--fs-h3); line-height: 1.2; letter-spacing: -.01em; color: var(--ink);
+  border-top: 3px dashed rgba(14,11,12,.3); padding-top: 14px;
+}
+.tkcard__go { width: 100%; margin-top: 4px; }
+
+/* ---------------- 입력 부품 ---------------- */
+.fld { display: grid; gap: 8px; }
+.fld__label { color: rgba(14,11,12,.7); letter-spacing: .16em; }
+.fld__in {
+  width: 100%; font-family: var(--font-body); font-weight: 600; font-size: var(--fs-lead);
+  color: var(--ink); background: var(--white); border: 3px solid var(--ink); border-radius: 0;
+  padding: 13px 14px; -webkit-appearance: none; appearance: none;
+}
+.fld__in::placeholder { color: rgba(14,11,12,.34); font-weight: 500; }
+.fld__in:focus { outline: 0; box-shadow: 5px 5px 0 var(--pink); }
+.fld__hint { font-size: var(--fs-label); line-height: 1.5; color: rgba(14,11,12,.6); }
+.fld__hint b { color: var(--ink); }
+.fld__err {
+  margin: 0; font-size: var(--fs-label); line-height: 1.5; font-weight: 600;
+  color: var(--red); background: rgba(216,50,47,.1); border-left: 4px solid var(--red); padding: 9px 12px;
+}
+
+/* 매수 스테퍼 */
+.qty { display: grid; grid-template-columns: 58px minmax(0, 1fr) 58px; gap: 0; }
+.qty__btn {
+  font-family: var(--font-body); font-weight: 700; font-size: 30px; line-height: 1;
+  background: var(--ink); color: var(--paper); border: 3px solid var(--ink);
+  display: grid; place-items: center; min-height: 56px; user-select: none;
+  transition: background .15s var(--ease-out);
+}
+.qty__btn:hover { background: var(--pink); color: var(--ink); }
+.qty__btn:active { background: var(--pink); color: var(--ink); }
+.qty__in {
+  font-family: var(--font-display); font-size: 30px; text-align: center; color: var(--ink);
+  background: var(--white); border: 3px solid var(--ink); border-left: 0; border-right: 0;
+  padding: 6px; min-width: 0; -moz-appearance: textfield;
+}
+.qty__in:focus { outline: 0; background: #FFF7FB; }
+.qty__in::-webkit-outer-spin-button, .qty__in::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* 한 매 = 한 부 — 작은 티켓 모양 안내
+   규칙(위)과 시간표(아래)를 절취선으로 나누고 양 끝에 반원 홈을 파서
+   '티켓 규칙'이라는 게 한눈에 보이게 합니다. 시간표 칸은 고르는 단추가 아니라
+   읽는 표입니다. 테두리·그림자 없이 납작하게 두어 '부를 골라야 하나?' 하고 헷갈리지 않게 합니다. */
+.onepart {
+  --op-pad: 20px;
+  display: grid; gap: 10px; justify-self: stretch;
+  padding: 16px var(--op-pad) 14px;
+  background: rgba(214,92,142,.12);
+  border: 3px solid var(--ink);
+}
+.onepart__en {
+  justify-self: start;
+  font-size: var(--fs-label); line-height: 1.2; letter-spacing: .08em; word-spacing: -.14em;
+  padding: 4px 10px; background: var(--pink); color: var(--ink);
+  transform: rotate(-1.5deg);
+}
+.onepart__title {
+  font-family: var(--font-ko-display); font-weight: 700;
+  font-size: var(--fs-lead); line-height: 1.3; letter-spacing: -.01em; color: var(--ink);
+  word-break: keep-all; text-wrap: balance;
+}
+/* '한 부' 에만 형광펜 */
+.onepart__title em {
+  font-style: normal; padding: 0 2px;
+  background: linear-gradient(transparent 58%, rgba(214,92,142,.6) 58%, rgba(214,92,142,.6) 94%, transparent 94%);
+}
+.onepart__stages {
+  position: relative; list-style: none; margin: 4px 0 0; padding: 14px 0 0;
+  border-top: 2px dashed rgba(14,11,12,.4);
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px;
+}
+/* 절취선 양 끝의 반원 홈. 카드 종이색으로 칠해 파낸 것처럼 보입니다.
+   가운데가 상자 바깥 테두리 선에 오도록 (안쪽 여백 + 테두리 3 + 반지름 12) 만큼 밖으로 뺍니다 */
+.onepart__stages::before, .onepart__stages::after {
+  content: ""; position: absolute; top: -13px;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--paper); border: 3px solid var(--ink);
+}
+.onepart__stages::before { left: calc(-1 * var(--op-pad) - 15px); clip-path: inset(0 0 0 50%); }
+.onepart__stages::after { right: calc(-1 * var(--op-pad) - 15px); clip-path: inset(0 50% 0 0); }
+.onepart__stages li {
+  display: grid; justify-items: center; align-content: center; gap: 2px;
+  padding: 8px 4px 9px; background: var(--ink); color: var(--paper); text-align: center;
+}
+.onepart__stages b {
+  font-family: var(--font-ko-display); font-weight: 700;
+  font-size: var(--fs-body); line-height: 1.2; color: var(--pink);
+}
+.onepart__stages span { font-family: var(--font-display); font-size: var(--fs-label); line-height: 1.3; letter-spacing: .04em; }
+/* 아주 좁은 폰에서는 '19:00' / '–21:00' 두 줄로 접힙니다 */
+.onepart__stages i { font-style: normal; white-space: nowrap; display: inline-block; }
+/* 관람 예시: '= n매' 가 세로로 줄 맞춰 서도록 두 칸 격자 */
+.onepart__ex {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: max-content max-content; gap: 0 12px;
+  font-size: var(--fs-label); line-height: 1.6; font-weight: 500; color: rgba(14,11,12,.72);
+}
+.onepart__ex li { display: contents; }
+.onepart__ex b { font-weight: 700; color: var(--ink); white-space: nowrap; }
+@media (max-width: 640px) {
+  .onepart { --op-pad: 14px; padding-top: 14px; }
+}
+
+/* 신분증 확인 — '한 매 = 한 부' 와 같은 모양의 민트 짝꿍 (2026-10-27).
+   입금하기 전에 알아야 '입금했는데 못 들어가는' 일이 없습니다. */
+.idcheck {
+  display: grid; gap: 10px; justify-self: stretch;
+  padding: 16px 20px;
+  background: rgba(77,190,140,.14);
+  border: 3px solid var(--ink);
+}
+.idcheck__en {
+  justify-self: start;
+  font-size: var(--fs-label); line-height: 1.2; letter-spacing: .08em;
+  padding: 4px 10px; background: var(--mint); color: var(--ink);
+  transform: rotate(1.5deg);
+}
+.idcheck__head { display: flex; align-items: center; gap: 14px; }
+.idcheck__art { flex: none; width: 74px; height: 54px; }
+.idcheck__title {
+  margin: 0; font-family: var(--font-ko-display); font-weight: 700;
+  font-size: var(--fs-lead); line-height: 1.3; letter-spacing: -.01em; color: var(--ink);
+  word-break: keep-all;
+}
+/* '신분증' 에만 민트 형광펜 */
+.idcheck__title em {
+  font-style: normal; padding: 0 2px;
+  background: linear-gradient(transparent 58%, rgba(77,190,140,.65) 58%, rgba(77,190,140,.65) 94%, transparent 94%);
+}
+.idcheck__t { margin: 0; font-size: var(--fs-label); line-height: 1.6; color: rgba(14,11,12,.72); word-break: keep-all; }
+.idcheck__ids { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.idcheck__ids li {
+  padding: 4px 10px; border: 2px solid var(--ink); background: var(--paper);
+  font-size: 14px; font-weight: 700; line-height: 1.4; color: var(--ink); white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .idcheck { padding: 14px; }
+}
+/* 좁은 폰: 그림이 옆에 있으면 제목이 세 줄로 접힙니다. 그림을 오른쪽 위 모서리(ID CHECK 꼬리표 옆)로 올려
+   제목이 폭을 다 쓰게 합니다. */
+@media (max-width: 420px) {
+  .idcheck { position: relative; }
+  .idcheck__head { display: block; }
+  .idcheck__art { position: absolute; top: 12px; right: 14px; width: 58px; height: 42px; }
+}
+
+/* 합계 */
+.total {
+  display: grid; gap: 2px; background: var(--ink); color: var(--paper); padding: 16px 18px;
+}
+.total__label { color: var(--pink); }
+.total__num { font-family: var(--font-display); font-size: var(--fs-num); line-height: 1.05; }
+.total__calc { font-size: var(--fs-label); color: rgba(241,234,226,.62); }
+
+/* ---------------- 가격 카드 ---------------- */
+.prow { display: flex; align-items: baseline; gap: 10px; }
+/* Share Tech Mono 에 ₩ 가 없어 다른 글꼴에서 끌어오면 숫자에 달라붙어
+   취소선처럼 보입니다. 금액은 한 글꼴 안에서 고정폭 숫자로 씁니다. */
+.prow__amt {
+  font-family: var(--font-body); font-weight: 800;
+  font-variant-numeric: tabular-nums; letter-spacing: -.015em;
+  font-size: calc(var(--fs-num) * .62); opacity: .55;
+}
+.prow__when { font-weight: 500; font-size: var(--fs-label); letter-spacing: .02em; opacity: .7; }
+.prow--best .prow__amt { font-size: var(--fs-num); opacity: 1; color: var(--ink); }
+.prow--best .prow__when { font-size: var(--fs-body); opacity: 1; color: var(--pink); }
+
+/* ---------------- 내 티켓 찾기 ---------------- */
+.tkcard--find { background: rgba(241,234,226,.07); color: var(--paper); border-color: rgba(241,234,226,.35); box-shadow: 8px 8px 0 rgba(241,234,226,.14); }
+.tkcard--find .fld__label { color: rgba(241,234,226,.68); }
+.tkcard--find .tkcard__title { color: var(--paper); }
+.find { display: grid; gap: 10px; }
+.find__row { display: grid; grid-template-columns: minmax(0, 1fr) 110px; gap: 10px; }
+.fld__in--code { font-family: var(--font-mono); letter-spacing: .22em; text-align: center; }
+.find__go { width: 100%; }
+.mine { display: grid; gap: 8px; padding-bottom: 14px; border-bottom: 2px dashed rgba(241,234,226,.25); }
+.mine__list { display: grid; gap: 8px; }
+.mine__item {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%;
+  padding: 11px 14px; background: var(--paper); color: var(--ink); text-align: left;
+  border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--pink);
+  transition: transform .15s var(--ease-out);
+}
+.mine__item:hover { transform: translate(-2px, -2px); }
+.mine__who { font-weight: 600; font-size: var(--fs-body); }
+.mine__no { font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: .16em; opacity: .75; }
+
+/* ---------------- 마감 카드 ---------------- */
+.tkcard--closed { justify-items: start; }
+.tkcard--closed .tape { margin-bottom: 2px; }
+
+/* ---------------- 마이티켓 ---------------- */
+.tkmine { display: grid; gap: 26px; max-width: 760px; }
+
+/* 입금 안내 */
+.pay { border-color: var(--ink); box-shadow: 8px 8px 0 var(--pink); display: grid; gap: 14px; }
+.pay__title { margin: 0; }
+.pay__lead { margin: -6px 0 0; font-size: var(--fs-body); color: rgba(14,11,12,.78); }
+.pay__lead b { color: var(--red); }
+.pay__rows { display: grid; gap: 0; border: 3px solid var(--ink); }
+.pay__row {
+  display: grid; grid-template-columns: 82px minmax(0, 1fr) auto; align-items: center; gap: 12px;
+  padding: 12px 14px; border-bottom: 2px dashed rgba(14,11,12,.25);
+}
+.pay__row:last-child { border-bottom: 0; }
+.pay__row--hi { background: rgba(214,92,142,.14); }
+.pay__k { color: rgba(14,11,12,.6); letter-spacing: .14em; }
+.pay__v { font-weight: 600; font-size: var(--fs-lead); line-height: 1.25; min-width: 0; overflow-wrap: anywhere; }
+.pay__v--mono { font-family: var(--font-mono); letter-spacing: .04em; }
+.pay__v--big { font-weight: 800; font-size: var(--fs-h3); letter-spacing: -.01em; }
+.cpy {
+  font-weight: 600; font-size: var(--fs-label); white-space: nowrap;
+  padding: 8px 14px; background: var(--ink); color: var(--paper); border: 2px solid var(--ink);
+  transition: background .15s var(--ease-out);
+}
+.cpy:hover { background: var(--pink); color: var(--ink); }
+.cpy--hi { background: var(--pink); color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+.cpy--hi:hover { background: var(--ink); color: var(--paper); }
+.cpy.is-done { background: var(--mint); color: var(--ink); }
+.pay__fine { margin: 0; font-size: var(--fs-label); line-height: 1.65; color: rgba(14,11,12,.68); }
+.pay__link { display: flex; align-items: center; gap: 10px; background: rgba(14,11,12,.07); padding: 10px 12px; }
+.pay__link-url { font-family: var(--font-mono); font-size: var(--fs-label); overflow-wrap: anywhere; flex: 1; min-width: 0; opacity: .8; }
+
+/* 잊어버려도 되찾는 법 */
+.keep {
+  display: grid; gap: 8px; padding: 14px 16px;
+  background: rgba(77,190,140,.14); border: 3px solid var(--mint);
+}
+.keep__row {
+  display: grid; grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 14px; align-items: baseline;
+}
+.keep__lbl { font-weight: 500; font-size: var(--fs-label); color: rgba(14,11,12,.6); }
+.keep__val { font-weight: 700; font-size: var(--fs-h3); letter-spacing: -.01em; line-height: 1.25; overflow-wrap: anywhere; color: #156945; }
+.keep__val--no { font-family: var(--font-mono); letter-spacing: .12em; color: #1C7A52; }
+/* 값(이름·예매번호) 바로 밑에서 '이 두 가지' 를 가리키는 한 줄 */
+.keep__lead { margin: 2px 0 0; font-size: var(--fs-body); font-weight: 700; line-height: 1.45; color: #156945; }
+.keep__t { margin: 0; font-size: var(--fs-label); line-height: 1.6; color: rgba(14,11,12,.72); }
+.keep__t b { color: var(--ink); }
+
+/* 티켓 본체 */
+.mt {
+  display: grid; grid-template-columns: minmax(0, 1fr) 230px;
+  background: var(--paper); color: var(--ink); border: 3px solid var(--ink); box-shadow: 10px 10px 0 var(--pink);
+}
+.mt__main { padding: 26px; display: grid; gap: 16px; align-content: start; }
+.mt__brandline { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.mt__brand { font-size: var(--fs-label); letter-spacing: .16em; }
+/* 큐알을 무엇에 쓰는지 + 신분증. 스태프가 큐알을 찍고 신분증을 봅니다.
+   흰 칸에 신분증 그림과 함께 둬서, 입구에서 화면을 켤 때 눈에 걸리게 합니다 (2026-10-27). */
+.mt__qrcap {
+  display: flex; align-items: center; gap: 10px; margin-top: 8px;
+  padding: 10px 14px; background: var(--white); border: 2px solid var(--ink);
+  text-align: left; font-size: var(--fs-label); line-height: 1.45; letter-spacing: -.005em;
+  color: var(--ink); word-break: keep-all;
+}
+.mt__qrcap-ic { flex: none; width: 26px; height: 26px; }
+.mt__qrcap b {
+  font-weight: 800; padding: 0 2px;
+  background: linear-gradient(transparent 56%, rgba(214,92,142,.55) 56%, rgba(214,92,142,.55) 94%, transparent 94%);
+}
+.mt__edition { font-size: var(--fs-h3); line-height: 1; color: var(--pink); }
+
+.mt__state {
+  display: inline-flex; align-items: center; gap: 10px; align-self: start;
+  font-family: var(--font-ko-display); font-weight: 800;
+  font-size: var(--fs-h3); line-height: 1.2; letter-spacing: -.01em;
+  padding: 9px 18px; border: 3px solid currentColor;
+}
+.mt__dot { width: 13px; height: 13px; border-radius: 50%; background: currentColor; flex: none; }
+.mt__state.is-pending { color: #B4721C; background: rgba(217,151,45,.14); }
+.mt__state.is-pending .mt__dot { animation: pulse 1.6s ease-in-out infinite; }
+.mt__state.is-paid { color: #1C7A52; background: rgba(77,190,140,.18); }
+.mt__state.is-used { color: rgba(14,11,12,.5); background: rgba(14,11,12,.07); }
+/* 밴드를 받은 뒤. 입금 확인(초록)과 사용 완료(회색) 사이의 단계라 파랑으로 구분합니다. */
+.mt__state.is-band { color: #1F5FA8; background: rgba(31,95,168,.12); }
+.mt__state.is-cancelled { color: var(--red); background: rgba(216,50,47,.12); }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+
+.mt__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 20px; }
+.mt__grid dt { margin-bottom: 3px; }
+.mt__grid dd { font-size: var(--fs-lead); line-height: 1.25; overflow-wrap: anywhere; }
+.mt__grid small { font-size: var(--fs-label); letter-spacing: .1em; opacity: .6; }
+.mt__perk {
+  margin: 0; font-family: var(--font-ko-display); font-weight: 800;
+  font-size: var(--fs-h3); letter-spacing: -.01em;
+  border-top: 3px dashed rgba(14,11,12,.3); padding-top: 14px;
+}
+.mt__used { margin: 0; font-size: var(--fs-label); line-height: 1.5; color: var(--red); font-weight: 700; }
+
+.mt__stub {
+  border-left: 3px dashed var(--ink); padding: 26px 18px; display: grid; gap: 10px;
+  justify-items: center; align-content: center; text-align: center;
+  background: repeating-linear-gradient(-45deg, transparent 0 12px, rgba(14,11,12,.035) 12px 24px);
+}
+.mt__stub-k { color: rgba(14,11,12,.6); letter-spacing: .16em; }
+.mt__code { font-family: var(--font-mono); font-size: var(--fs-num); line-height: 1; letter-spacing: .1em; }
+.mt__qr { width: 168px; height: 168px; background: var(--white); padding: 8px; border: 2px solid var(--ink); }
+.mt__qr svg, .mt__qr img { width: 100%; height: 100%; display: block; }
+.mt__qr.is-empty { display: none; }
+.mt__admit { font-size: var(--fs-label); letter-spacing: .2em; padding: 6px 14px; background: var(--ink); color: var(--paper); }
+.mt.is-cancelled { opacity: .55; box-shadow: 10px 10px 0 rgba(241,234,226,.2); }
+
+/* 스태프 */
+.staff { background: var(--ink-2); color: var(--paper); border-color: var(--mint); box-shadow: 8px 8px 0 rgba(77,190,140,.35); display: grid; gap: 14px; }
+.staff__title { margin: 0; color: var(--mint); }
+.staff__who {
+  margin: -4px 0 0; font-size: var(--fs-label); line-height: 1.5; color: rgba(241,234,226,.6);
+  border-left: 3px solid var(--mint); padding-left: 10px;
+}
+.staff__who b { color: var(--mint); }
+.staff__btns { display: flex; flex-wrap: wrap; gap: 10px; }
+.staff__btn {
+  font-weight: 700; font-size: var(--fs-body); padding: 12px 18px;
+  border: 3px solid var(--paper); background: transparent; color: var(--paper);
+}
+.staff__btn--go { background: var(--mint); color: var(--ink); border-color: var(--mint); }
+.staff__btn--off { border-color: rgba(241,234,226,.4); color: rgba(241,234,226,.7); }
+.staff__msg { margin: 0; font-size: var(--fs-label); color: rgba(241,234,226,.7); }
+
+.mtfoot { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.mtfoot .btn { font-size: var(--fs-body); padding: 11px 18px; border-width: 2px; }
+.mtfoot__fine { margin: 0; text-align: center; font-size: var(--fs-label); line-height: 2; color: rgba(241,234,226,.7); }
+/* 잊지 말아야 할 두 가지를 딱지처럼 붙여 눈에 띄게 합니다 */
+.hl {
+  display: inline-block; font-weight: 700;
+  font-size: calc(var(--fs-label) * 1.08); letter-spacing: .01em;
+  color: var(--ink); background: var(--mint);
+  padding: 2px 9px; margin: 0 2px; box-shadow: 2px 2px 0 rgba(14,11,12,.55);
+}
+
+/* ---------------- 바닥 ---------------- */
+.tkfoot { background: var(--ink-3); padding: 26px var(--gutter); text-align: center; color: rgba(241,234,226,.5); display: grid; gap: 8px; }
+.tkfoot__c { margin: 0; font-size: var(--fs-label); }
+.tkfoot__c a { border-bottom: 1px solid rgba(241,234,226,.3); }
+/* 연락처 (바닥글, 서버 점검 화면): 한 사람씩 통째로 */
+.pc { white-space: nowrap; }
+/* 입금 안내 제목·안내문: 두 줄이 되면 고르게 ('입금해 / 주세요' 처럼 끝만 떨어지지 않게) */
+.pay__title, .pay__lead { text-wrap: balance; }
+.pay__v--mono { white-space: nowrap; }
+
+/* ---------------- 좁은 화면 ---------------- */
+@media (max-width: 900px) {
+  .tkgrid, .tkgrid--one { grid-template-columns: minmax(0, 1fr); }
+  .mt { grid-template-columns: minmax(0, 1fr); }
+  .mt__stub { border-left: 0; border-top: 3px dashed var(--ink); }
+}
+
+@media (max-width: 640px) {
+  .tkmain { padding: 26px 0 64px; }
+  .tknav { padding: 8px 16px; }
+  .tknav__logo img { height: 32px; }
+  .tkhead { margin-bottom: 26px; }
+  .tkhead__meta { gap: 8px; font-size: 12px; letter-spacing: .1em; }
+  .card { padding: 20px 18px; box-shadow: 6px 6px 0 var(--ink); }
+  .tkcard--find { box-shadow: 6px 6px 0 rgba(241,234,226,.14); }
+  .pay { box-shadow: 6px 6px 0 var(--pink); }
+  .mt { box-shadow: 7px 7px 0 var(--pink); }
+  .mt__main { padding: 20px 18px; }
+  .mt__stub { padding: 20px 18px; }
+  .mt__grid { gap: 12px 14px; }
+  /* 이름표를 값 위로 올립니다. 값이 줄 폭을 다 써서 계좌번호·입금자명이 한 줄에 들어갑니다
+     (옆에 두면 360px 폰에서 '000-0000-' / '0000' 로 끊겼습니다). 복사 버튼은 오른쪽, 두 줄 높이의 가운데. */
+  .pay__row {
+    grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "k c" "v c";
+    gap: 1px 10px; padding: 10px 12px;
+  }
+  .pay__row .pay__k { grid-area: k; }
+  .pay__row .pay__v { grid-area: v; }
+  .pay__row .cpy { grid-area: c; align-self: center; }
+  /* 연락처: 두 사람을 두 줄로. 직함·이름은 오른쪽, 번호는 왼쪽에 붙여 번호끼리 세로줄을 맞춥니다 */
+  .pcs { display: grid; grid-template-columns: auto auto; justify-content: center; gap: 2px 10px; }
+  .pcs .pc { display: contents; }
+  .pcs .pc__who { text-align: right; }
+  .pcs .pc__tel { justify-self: start; }
+  .pcs .pc__sep { display: none; }
+  /* 티켓 주소: 주소가 줄 폭을 다 쓰고, 복사 버튼은 그 아래 오른쪽 */
+  .pay__link { flex-wrap: wrap; }
+  .pay__link-url { flex: 1 1 100%; }
+  .pay__link .cpy { margin-left: auto; }
+  .pay__v { font-size: var(--fs-body); }
+  .pay__v--big { font-size: var(--fs-lead); }
+  .cpy { padding: 8px 11px; }
+  .qty { grid-template-columns: 60px minmax(0, 1fr) 60px; }
+  .qty__btn { font-size: 32px; min-height: 58px; }
+  .find__row { grid-template-columns: minmax(0, 1fr) 92px; }
+  .mtfoot .btn { flex: 1 1 auto; }
+}
+
+/* 누를 때 반응 (터치 기기) */
+@media (hover: none) {
+  .mine__item:active, .cpy:active, .staff__btn:active { transform: scale(.97); }
+}
+
+/* 방문 기록 안내 (2026-11-05 변경 고지) */
+.mtpriv { margin: 0; padding: 12px 14px; font-size: var(--fs-label); line-height: 1.6; word-break: keep-all; color: rgba(241,234,226,.78); border: 1px solid rgba(241,234,226,.22); }
+.mtpriv b { display: block; margin-bottom: 4px; color: var(--paper, #F1EAE2); }

@@ -1,0 +1,371 @@
+/* ============================================================
+   sponsor-page.css — 후원사 목록 (메인 페이지와 후원사 페이지가 함께 씁니다)
+   등급은 크기와 자리로만 드러냅니다. 금액은 어디에도 적지 않습니다.
+   ============================================================ */
+
+.spbody { background: var(--ink); min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ---------------- 후원사 페이지 상단 ---------------- */
+.spnav {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 10px var(--gutter);
+  background: rgba(14,11,12,.92); backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(241,234,226,.14);
+}
+.spnav__logo {
+  background: var(--paper); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--pink);
+  padding: 2px 10px; transform: rotate(-4deg);
+}
+.spnav__logo img { height: 40px; width: auto; }
+.spnav__home { font-size: var(--fs-label); letter-spacing: .18em; padding: 8px 14px; border: 2px solid rgba(241,234,226,.35); }
+.spnav__home:hover { border-color: var(--paper); }
+
+.spmain { flex: 1; padding: 48px 0 90px; }
+.sphead { text-align: center; margin-bottom: 46px; }
+.sphead__title { margin-top: 18px; color: var(--paper); }
+.sphead__ko { margin-top: 6px; color: var(--pink); }
+.sphead__sub { margin: 14px auto 0; max-width: 620px; color: rgba(241,234,226,.76); line-height: 1.75; }
+.sploading { text-align: center; color: rgba(241,234,226,.5); padding: 40px 0; }
+
+/* ---------------- 등급 ---------------- */
+.sptiers { display: grid; gap: 16px; }
+/* 헤드라인 뒤에서만 한 번 숨을 쉬고, 나머지 묶음은 바로 이어 붙습니다 */
+.tier--headline { margin-bottom: 26px; }
+.tier--bare { gap: 0; }
+.tier { display: grid; gap: 22px; }
+.tier__head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.tier__line { flex: 1 1 60px; height: 3px; background: rgba(241,234,226,.16); }
+.tier__label { font-family: var(--font-display); font-size: var(--fs-h3); letter-spacing: .18em; color: var(--pink); }
+.tier__ko { font-family: var(--font-ko-display); font-weight: 700; font-size: var(--fs-lead); color: var(--paper); }
+.tier__sub { font-size: var(--fs-label); color: rgba(241,234,226,.5); }
+
+/* ---------------- 카드 공통 ---------------- */
+.sp {
+  position: relative; display: flex; flex-direction: column; justify-content: flex-end;
+  background: var(--paper); color: var(--ink);
+  border: 3px solid var(--ink); box-shadow: 8px 8px 0 var(--pink);
+  padding: 22px; overflow: hidden;
+  transition: transform .2s var(--ease-out), box-shadow .2s var(--ease-out);
+}
+.sp:hover { transform: translate(-3px, -3px); box-shadow: 12px 12px 0 var(--pink); }
+.sp__name { font-family: var(--font-ko-display); font-weight: 700; line-height: 1.2; letter-spacing: -.01em; }
+.sp__pin { position: absolute; right: 14px; top: 12px; opacity: .35; }
+.sp__star { position: absolute; left: 16px; top: 14px; opacity: .55; }
+.tier--headline .sp__star { color: var(--pink); }
+.tier--lg .sp__star { color: var(--mint); }
+.sp:hover .sp__pin { opacity: .9; }
+
+/* 1등급 */
+/* 1등급: 한 줄에 하나씩. 가게를 들여다보는 창입니다 (shop-card.css) */
+.tier--headline .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+
+/* 큰 카드 — 간판을 그려 둔 곳 */
+.tier--lg .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(212px, 1fr)); gap: 18px; }
+.tier--lg .sp { min-height: 142px; box-shadow: 7px 7px 0 var(--mint); }
+.tier--lg .sp:hover { box-shadow: 10px 10px 0 var(--mint); }
+.tier--lg .sp__name { font-size: var(--fs-h3); }
+
+/* 간판을 그려둔 카드 — 간판이 카드를 꽉 채우고 아래에 이름 띠 하나
+   카드 높이는 간판 그림의 비율(300:130)을 따릅니다. 높이를 고정해 두면 폭에 따라 칸이
+   넓적해지거나 홀쭉해져서 간판 위아래나 양옆이 잘렸습니다(폰에서 포카츠 젓가락 · 그릇 받침,
+   320px 에서 타임약국의 '타'). 그림은 viewBox 비율로 높이가 저절로 정해집니다(height:auto).
+   aspect-ratio 를 쓰지 않는 건 사파리 격자 칸 문제 때문입니다. */
+.sp.sp--sign { display: block; padding: 0 0 34px; min-height: 0; overflow: hidden; }
+.sp--sign .sp__star { display: none; }
+.sp__sign {
+  position: relative; z-index: 0; display: block;
+  width: 100%; height: auto;
+  transition: transform .45s var(--ease-out);
+}
+.sp--sign:hover .sp__sign { transform: scale(1.04); }
+.sp--sign .sp__name {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; height: 34px;
+  display: flex; align-items: center; padding: 0 14px;
+  font-size: var(--fs-body); color: var(--ink);
+  background: var(--paper); border-top: 3px solid var(--ink);
+}
+.sp--sign .sp__pin { z-index: 2; color: var(--ink); opacity: .4; }
+.sp--sign:hover .sp__pin { opacity: .85; }
+
+/* 간판 속 글씨 */
+.sg-burrito { font-family: var(--font-display); font-size: 38px; fill: #FFF; letter-spacing: .01em; }
+.sg-burrito-sub { font-family: var(--font-body); font-weight: 600; font-size: 10px; fill: #F0DCC6; letter-spacing: .04em; }
+.sg-suwon-a {
+  font-family: var(--font-impact); font-size: 36px; fill: #1B3E9B;
+  paint-order: stroke; stroke: #0E0B0C; stroke-width: 4px; stroke-linejoin: round; letter-spacing: .02em;
+}
+.sg-suwon-b {
+  font-family: var(--font-impact); font-size: 36px; fill: #D8322F;
+  paint-order: stroke; stroke: #0E0B0C; stroke-width: 4px; stroke-linejoin: round; letter-spacing: .02em;
+}
+.sg-suwon-tel { font-family: var(--font-mono); font-size: 13px; fill: #17140F; }
+/* 우자매순대국 — 굵은 붓글씨 상호, 손글씨 문구·전화, 빨간 가마솥 도장
+   (두 글꼴은 간판 글자만 받아 옵니다 — index.html · sponsors.html 의 text= 목록) */
+/* 실제 간판은 붓 획이 아주 굵습니다. 같은 색 테두리를 둘러 획을 살찌웁니다 */
+.sg-wj {
+  font-family: 'Black And White Picture', var(--font-impact), sans-serif; font-size: 39px; fill: #1D2030;
+  paint-order: stroke; stroke: #1D2030; stroke-width: 1.3px; stroke-linejoin: round;
+}
+.sg-wj-hand { font-family: 'East Sea Dokdo', var(--font-ko), sans-serif; font-size: 13px; fill: #3A3D48; }
+.sg-wj-tel { font-family: 'East Sea Dokdo', var(--font-mono), sans-serif; font-size: 15px; fill: #2A2D38; letter-spacing: .02em; }
+.sg-wj-seal { font-family: 'East Sea Dokdo', var(--font-ko), sans-serif; font-size: 14px; fill: #FFF3EE; }
+.sg-pokatsu { font-family: var(--font-brush); font-size: 38px; fill: #131313; letter-spacing: .02em; }
+.sg-pokatsu-sub { font-family: var(--font-ko); font-size: 13px; fill: #131313; letter-spacing: .06em; }
+.sg-jjam-small { font-family: var(--font-ko); font-size: 13px; fill: #17140F; }
+.sg-jjam-a { font-family: var(--font-brush); font-size: 35px; fill: #17140F; letter-spacing: .02em; }
+.sg-jjam-b { font-family: var(--font-brush); font-size: 35px; fill: #D8322F; letter-spacing: .02em; }
+.sg-jjam-tel { font-family: var(--font-mono); font-size: 13px; fill: #FFF; letter-spacing: .1em; }
+.sg-time { font-family: var(--font-impact); font-size: 50px; fill: #121114; letter-spacing: -.02em; }
+/* 초록 십자 위의 흰 약 자. 얇은 검정 테두리를 둘러야 초록 바탕에서 획이 또렷합니다.
+   paint-order 로 테두리를 글자 뒤에 깔아야 획이 두꺼워지지 않습니다. */
+.sg-time-cross {
+  font-family: var(--font-impact); font-size: 34px; fill: #FFFFFF; letter-spacing: -.02em;
+  paint-order: stroke; stroke: #121114; stroke-width: 2.4px; stroke-linejoin: round;
+}
+
+/* 가운데 카드 — 열여섯 곳 모두 같은 크기, 같은 모양입니다.
+   여기서는 순서로도 크기로도 차이를 두지 않습니다. */
+.tier--md .grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(176px, 1fr)); gap: 14px;
+}
+.tier--md .sp {
+  min-height: 92px; padding: 16px; border-width: 2px; box-shadow: 5px 5px 0 var(--ink);
+}
+.tier--md .sp:hover { box-shadow: 8px 8px 0 var(--ink); }
+.tier--md .sp__name { font-size: var(--fs-lead); }
+.tier--md .sp__star { color: var(--pink); opacity: .45; }
+
+/* 작은 카드 */
+.tier--sm .grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(138px, 1fr)); gap: 12px;
+}
+.tier--sm .sp {
+  min-height: 64px; padding: 12px 13px; border-width: 2px; box-shadow: 4px 4px 0 var(--ink);
+}
+.tier--sm .sp:hover { box-shadow: 6px 6px 0 var(--ink); }
+.tier--sm .sp__name { font-size: var(--fs-body); }
+.tier--sm .sp__star { color: var(--pink); opacity: .4; width: 13px; height: 13px; left: 12px; top: 11px; }
+.tier--sm .sp__pin { right: 11px; top: 10px; width: 15px; height: 15px; }
+
+/* ---------------- 명예의 전당 ----------------
+   후원사 카드와 똑같이 생기면 가게 목록에 사람이 섞인 것처럼 보입니다.
+   이건 목록이 아니라 현판입니다. 검은 판에 놋쇠 테를 두르고 이름을 새깁니다.
+   등수는 드러내지 않습니다 — 앞의 두 분은 순서만 다릅니다. */
+.tier--alumni {
+  margin-top: 52px;
+  gap: 0;
+  padding: 34px 30px 26px;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 0%, rgba(201,162,39,.13) 0%, rgba(201,162,39,0) 70%),
+    linear-gradient(180deg, #17141C 0%, #0D0B10 100%);
+  border: 3px double #9E7C1E;
+  box-shadow: inset 0 0 0 1px rgba(217,180,91,.14), 0 20px 50px rgba(0,0,0,.45);
+}
+/* 머리말: 가운데로 모아 세우고 아래에 놋쇠 선 한 줄 */
+.tier--alumni .tier__head {
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px; text-align: center; margin-bottom: 8px;
+}
+.tier--alumni .tier__label {
+  font-size: var(--fs-h3); letter-spacing: .28em;
+  color: #D9B45B; text-indent: .28em;
+}
+/* 한글은 제목이 아니라 부제입니다. HALL OF FAME 이 머리말을 맡고,
+   이 줄은 누구인지만 조용히 알려 줍니다. */
+.tier--alumni .tier__ko {
+  font-family: var(--font-ko); font-weight: 500;
+  font-size: var(--fs-label); letter-spacing: .02em;
+  color: rgba(241,234,226,.52);
+}
+.tier--alumni .tier__sub { color: rgba(241,234,226,.5); }
+.tier--alumni .tier__line {
+  flex: none; width: 100%; height: 2px; margin-top: 14px;
+  background: linear-gradient(90deg,
+    rgba(217,180,91,0) 0%, rgba(217,180,91,.55) 18%,
+    rgba(217,180,91,.55) 82%, rgba(217,180,91,0) 100%);
+}
+
+/* 이름: 카드가 아니라 새겨 넣은 글씨.
+   늘어놓기(flex)입니다. 마지막 줄이 덜 차면 가운데로 모이게 하려고 그렇습니다
+   (격자는 남는 칸을 가운데로 못 모읍니다). 앞의 두 분은 절반씩, 나머지는 1/3 씩. */
+.tier--alumni .grid {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 0;
+}
+.tier--alumni .sp--person { flex: 0 0 calc(100% / 3); max-width: calc(100% / 3); }
+.tier--alumni .sp--person:nth-child(1),
+.tier--alumni .sp--person:nth-child(2) { flex: 0 0 50%; max-width: 50%; }
+
+/* 한 칸 = 세 줄 [직함 / 이름 / 악기]. 직함이 없는 칸도 그 줄을 비워 둔 채 같은 키로 섭니다.
+   그래서 한 줄에 놓인 이름들은 늘 같은 높이, 밑줄도 같은 높이에 그어집니다.
+   내용은 가운데가 아니라 위에서부터 쌓습니다 — 가운데 맞춤이면 한 칸만 키가 달라져도
+   그 칸 이름이 위로 떠 버립니다. */
+.sp--person {
+  position: relative; isolation: isolate;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  gap: 0; padding: 12px 8px 15px; text-align: center;
+  background: transparent; border: 0; box-shadow: none; rotate: none;
+  cursor: default; overflow: visible;
+}
+.sp--person::after {
+  content: ""; position: absolute; left: 12%; right: 12%; bottom: 0; height: 1px;
+  background: rgba(217,180,91,.2);
+}
+.sp--person:hover { transform: none; box-shadow: none; }
+.sp--person .sp__star { display: none; }
+.sp--person .sp__name {
+  position: relative;
+  font-family: var(--font-ko-display); font-weight: 700;
+  font-size: var(--fs-lead); line-height: 1.25; letter-spacing: .02em;
+  color: #F2E6CC; text-shadow: 0 1px 0 rgba(0,0,0,.5);
+}
+/* 직함과 악기. 새겨 넣은 듯한 기하학 대문자(Jost — 이 두 줄만을 위해 들인 라틴 글꼴).
+   작은 대문자는 자간을 너무 벌리면 낱자가 흩어져 낱말로 안 읽힙니다. .18em 이 상한입니다.
+   마지막 글자 뒤에도 자간이 붙어 글줄이 왼쪽으로 밀리므로, 같은 만큼 왼쪽을 채워 되밉니다. */
+.sp--person .sp__title,
+.sp--person .sp__role {
+  --track: .18em;
+  display: block; min-height: 15px;
+  font-family: 'Jost', var(--font-ko-display), sans-serif; font-weight: 400;
+  font-size: 10px; line-height: 15px;
+  letter-spacing: var(--track); padding-left: var(--track);
+  max-width: 100%;
+}
+/* 직함은 이름 위에, 놋쇠빛으로. 굵기는 그대로 두고 색만 바꿉니다 */
+.sp--person .sp__title { margin-bottom: 3px; color: rgba(217,180,91,.82); }
+.sp--person .sp__role { margin-top: 5px; color: rgba(241,234,226,.46); }
+/* 낱말은 통째로 다니고, 가운뎃점은 앞뒤 간격만 똑같이 갖습니다 */
+.sp--person .sp__part { white-space: nowrap; }
+.sp--person .sp__sep { margin: 0 .3em; opacity: .7; }
+
+/* 앞의 두 분은 이름에 불이 들어옵니다.
+   색을 바꾸기보다 크림색에 놋쇠 기운을 섞고 뒤로 빛을 깔아, 같은 판 위에서
+   '조명을 받은 이름' 처럼 보이게 합니다. 등수를 적지 않고도 눈이 먼저 갑니다.
+   빛은 칸이 아니라 이름에 붙입니다 — 직함 줄이 생겨도 늘 이름 한가운데 뒤에 깔립니다. */
+.tier--alumni .sp--person:nth-child(1) .sp__name,
+.tier--alumni .sp--person:nth-child(2) .sp__name {
+  font-size: var(--fs-h3);
+  color: #F5E3B4;
+  text-shadow: 0 0 22px rgba(217,180,91,.5), 0 1px 0 rgba(0,0,0,.55);
+}
+.tier--alumni .sp--person:nth-child(1) .sp__name::before,
+.tier--alumni .sp--person:nth-child(2) .sp__name::before {
+  content: ""; position: absolute; z-index: -1;
+  left: 50%; top: 50%; width: 180px; height: 74px; transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse, rgba(217,180,91,.17) 0%, rgba(217,180,91,0) 70%);
+  pointer-events: none;
+}
+/* 기울여 붙이는 장난은 현판에서는 끕니다 */
+.tier--alumni .sp:nth-child(3n+1),
+.tier--alumni .sp:nth-child(3n+2),
+.tier--alumni .sp:nth-child(3n+3) { rotate: none; }
+
+/* 살짝 기울여 붙인 느낌 */
+.sp:nth-child(3n+1) { rotate: -.7deg; }
+.sp:nth-child(3n+2) { rotate: .5deg; }
+.sp:nth-child(3n+3) { rotate: -.3deg; }
+
+/* ---------------- 후원사 페이지 바닥 ---------------- */
+.spfoot { margin-top: 56px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.spfoot__t { margin: 0; font-size: var(--fs-label); color: rgba(241,234,226,.5); }
+.spend { background: var(--ink-3); padding: 26px var(--gutter); text-align: center; color: rgba(241,234,226,.5); display: grid; gap: 8px; }
+.spend__c { margin: 0; font-size: var(--fs-label); }
+
+/* ---------------- 좁은 화면 ---------------- */
+@media (max-width: 640px) {
+  .spmain { padding: 28px 0 64px; }
+  .spnav { padding: 8px 16px; }
+  .spnav__logo img { height: 32px; }
+  .sphead { margin-bottom: 32px; }
+  .sptiers { gap: 12px; }
+  .tier--headline { margin-bottom: 18px; }
+  .tier__label { font-size: var(--fs-lead); }
+  .tier__ko { font-size: var(--fs-body); }
+
+  .tier--headline .grid { gap: 16px; }
+  .tier--lg .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .tier--lg .sp { min-height: 104px; padding: 16px; box-shadow: 5px 5px 0 var(--mint); }
+  .tier--lg .sp__name { font-size: var(--fs-lead); }
+  /* 폰에서는 좁아서 표식을 위에 두고 이름을 아래에 놓습니다 */
+  .sp.sp--sign { padding: 0 0 28px; min-height: 0; }
+  .sp--sign .sp__name { height: 28px; padding: 0 11px; font-size: var(--fs-label); }
+  .tier--md .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .tier--md .sp { min-height: 74px; padding: 13px; box-shadow: 4px 4px 0 var(--ink); }
+  .tier--md .sp__name { font-size: var(--fs-body); }
+  .tier--md .sp__star { left: 12px; top: 11px; }
+  .tier--md .sp__pin { right: 11px; top: 10px; }
+  .tier--alumni { margin-top: 34px; padding: 26px 16px 18px; }
+  .tier--alumni .tier__label { font-size: var(--fs-lead); letter-spacing: .22em; }
+  .tier--alumni .tier__ko { font-size: 13px; }
+  .tier--alumni .tier__sub { flex: none; font-size: 13px; }
+  .sp--person { padding: 10px 3px 13px; }
+  /* 폰의 1/3 칸(360px 화면에서 약 90px)에 'VICE LEADER' 가 한 줄로 들어가는 자간 */
+  .sp--person .sp__title,
+  .sp--person .sp__role { --track: .12em; min-height: 14px; line-height: 14px; }
+  .sp--person .sp__title { margin-bottom: 2px; }
+  .sp--person .sp__role { margin-top: 4px; }
+  .sp--person .sp__name { font-size: var(--fs-body); }
+  .tier--alumni .sp--person:nth-child(1) .sp__name::before,
+  .tier--alumni .sp--person:nth-child(2) .sp__name::before { width: 150px; height: 64px; }
+
+  .tier--sm .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .tier--sm .sp { min-height: 56px; padding: 11px 12px; }
+  .tier--sm .sp__name { font-size: var(--fs-label); }
+
+  .spfoot { margin-top: 36px; justify-content: center; text-align: center; }
+}
+
+/* 누를 때 반응 (터치 기기) */
+@media (hover: none) {
+  .sp:active { transform: scale(.985); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sp { transition: none; }
+}
+
+/* ---------------- 후원사 안내 창 ----------------
+   카드를 누르면 지도 앱으로 바로 튕겨 나가는 대신, 어디로 가는지 먼저 보여 줍니다. */
+.spsheet { display: grid; gap: 10px; }
+.spsheet__kind { font-size: var(--fs-label); letter-spacing: .2em; color: var(--pink); }
+.spsheet__name { margin: 0; font-family: var(--font-ko-display); font-weight: 900; font-size: var(--fs-h2); line-height: 1.15; letter-spacing: -.02em; }
+.spsheet__marks { margin: 0; font-size: var(--fs-label); color: rgba(14,11,12,.6); }
+.spsheet__info { margin: 6px 0 0; display: grid; gap: 9px; border-top: 2px dashed rgba(14,11,12,.25); padding-top: 14px; }
+.spsheet__info > div { display: flex; align-items: baseline; gap: 14px; }
+.spsheet__info dt { flex: 0 0 4.6em; font-size: var(--fs-label); letter-spacing: .08em; color: rgba(14,11,12,.55); }
+.spsheet__info dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+.spsheet__info dd a { text-decoration: underline; text-underline-offset: 3px; }
+.spsheet__go { margin-top: 6px; display: grid; gap: 9px; }
+.spsheet__go .btn { width: 100%; border-color: var(--ink); color: var(--ink); }
+.spsheet__go .btn--pink { box-shadow: 5px 5px 0 var(--ink); }
+.spsheet__note { margin: 2px 0 0; font-size: var(--fs-label); color: rgba(14,11,12,.5); text-align: center; }
+@media (min-width: 641px) {
+  .spsheet__go { grid-auto-flow: column; grid-auto-columns: 1fr; }
+}
+
+/* ---------- 간판 카드: 덜 찬 줄은 가운데로 ----------
+   한 줄 칸 수는 예전 격자(auto-fit, 최소 212px · 간격 18px)와 똑같이 묶음 너비로 정합니다.
+   격자는 남는 칸을 가운데로 못 모아서 늘어놓기(flex)로 바꿉니다 — 명예의 전당과 같은 방식.
+   이걸 모르는 옛 브라우저는 위의 격자를 그대로 씁니다(남는 줄이 왼쪽에 붙을 뿐). */
+@supports (container-type: inline-size) {
+  .tier--lg .grid {
+    --g: 18px;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: var(--g);
+    container-type: inline-size;
+  }
+  .tier--lg .grid > .sp { flex: 0 0 auto; width: calc((100% - var(--g)) / 2); }
+  @container (min-width: 672px)  { .tier--lg .grid > .sp { width: calc((100% - 2 * var(--g)) / 3); } }
+  @container (min-width: 902px)  { .tier--lg .grid > .sp { width: calc((100% - 3 * var(--g)) / 4); } }
+  @container (min-width: 1132px) { .tier--lg .grid > .sp { width: calc((100% - 4 * var(--g)) / 5); } }
+  @container (min-width: 1362px) { .tier--lg .grid > .sp { width: calc((100% - 5 * var(--g)) / 6); } }
+  @media (max-width: 640px) { .tier--lg .grid { --g: 12px; } }
+}
+
+/* ---------- 이름 카드: 두 줄 이름이 ★ 와 겹치지 않게 ----------
+   이름은 카드 아래에 붙어 있다가, 두 줄로 넘어가면 위로 자라 왼쪽 위 ★(오른쪽 위 핀)와
+   겹쳤습니다(폰에서 '미스터빠삭 제천세명대점' 등). 표식 자리만큼 위를 비워 둡니다.
+   한 줄 이름은 보기에 그대로이고, 두 줄이면 카드가 그만큼 길어집니다. */
+.sp:not(.sp--sign):not(.sp--person) { padding-top: 38px; }
+@media (max-width: 640px) {
+  .sp:not(.sp--sign):not(.sp--person) { padding-top: 34px; }
+}

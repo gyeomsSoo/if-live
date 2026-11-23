@@ -1,0 +1,114 @@
+# ============================================================
+# I.F 2026 LIVE — 웹서버 설정 (Caddy)
+#
+# 사이트 파일: ../site
+# 관리자 화면: ../private/admin.html  (사이트 폴더 밖. 아래 비밀 주소로만 열립니다. 공개 저장소에는 없음)
+# 티켓 백엔드: ./api/app.py           (127.0.0.1:8787, 바깥에서 직접 못 붙습니다)
+#
+# 비밀 값은 환경 변수로 넣습니다.
+#   ZEROSSL_API_KEY  ZeroSSL 무료 계정의 API 키
+#   STAFF_PATH       관리 화면 주소 (예: /staff-추측하기-어려운-값, api/config.json 의 staffPath 와 같게)
+#
+# server 폴더에서 실행:
+#   caddy run --config Caddyfile
+# 설정을 고친 뒤에는 서버를 끄지 않고 반영합니다:
+#   caddy reload --config Caddyfile
+# ============================================================
+{
+	# 인증서와 상태 저장 위치를 고정합니다.
+	# 이렇게 해두면 수동 실행이든 자동 시작 서비스든 같은 인증서를 씁니다.
+	storage file_system {
+		root ./caddy-data
+	}
+
+	# 인증서 발급 기관: ZeroSSL
+	# kro.kr 은 수천 명이 함께 쓰는 도메인이라 Let's Encrypt 의 주간 한도(등록 도메인당 50장)가
+	# 항상 소진되어 있습니다. 그래서 한도 방식이 다른 ZeroSSL 을 씁니다.
+	cert_issuer zerossl {$ZEROSSL_API_KEY}
+
+	# 서버 자체 로그 (인증서 발급 성공/실패가 여기 남습니다)
+	log {
+		output file ./logs/caddy.log {
+			roll_size 10MiB
+			roll_keep 5
+		}
+		level INFO
+	}
+}
+
+# www.ifband.kro.kr 로 들어오면 기본 주소로 넘깁니다.
+# 운영 때는 옛 안드로이드 인앱 브라우저(인스타 · 에타)가 새 루트 'Sectigo E46' 을 몰라서
+# 다리 인증서(USERTrust ECC 가 서명한 E46)를 붙인 묶음을 tls 로 직접 내줬습니다.
+www.ifband.kro.kr {
+	redir https://ifband.kro.kr{uri} permanent
+}
+
+ifband.kro.kr {
+	encode zstd gzip
+
+	header {
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+
+	# 포스터·로고 같은 이미지는 오래 캐시합니다 (파일 이름이 바뀌지 않는 한 그대로).
+	@assets path /assets/*
+	header @assets Cache-Control "public, max-age=2592000"
+
+	# CSS·JS: 공연 전까지는 계속 고치므로 캐시하지 않습니다.
+	# (매번 내려받는 게 아니라, 바뀌었는지만 확인하고 안 바뀌었으면 그대로 씁니다.)
+	@code path *.css *.js
+	header @code Cache-Control "no-cache, must-revalidate"
+
+	# 셋리스트·후원사 데이터와 페이지들은 캐시하지 않습니다.
+	@data path /data/*
+	header @data Cache-Control "no-cache, must-revalidate"
+	@pages path / /index.html /ticket /ticket.html {$STAFF_PATH}
+	header @pages Cache-Control "no-cache, must-revalidate"
+
+	# 예매 자료는 절대 캐시하지 않습니다. 남의 티켓이 보이면 안 됩니다.
+	header /api/* Cache-Control "no-store, private"
+
+	# ---------------- 티켓 예매 백엔드 ----------------
+	# 이 컴퓨터 안에서만 도는 파이썬 서버로 넘깁니다.
+	# 바깥에서는 /api/ 로 시작하는 주소만 닿을 수 있습니다.
+	handle /api/* {
+		reverse_proxy 127.0.0.1:8787 {
+			# 예매 서버가 잠깐 다시 켜지는 사이에 들어온 요청은 버리지 않고
+			# 5초 동안 다시 시도합니다. 손님 눈에는 아무 일도 없던 것처럼 보입니다.
+			lb_try_duration 5s
+			lb_try_interval 250ms
+
+			# 백엔드가 아주 꺼져 있어도 사이트 전체가 멈추지는 않게 합니다.
+			transport http {
+				dial_timeout 3s
+				response_header_timeout 20s
+			}
+		}
+	}
+
+	# ---------------- 관리자 화면 ----------------
+	# 사이트 폴더 밖(../private)에 두어 주소를 모르면 닿을 수 없게 합니다.
+	# 주소를 알아도 비밀번호를 넣어야 자료가 보입니다.
+	handle {$STAFF_PATH} {
+		root * ../private
+		rewrite * /admin.html
+		file_server
+	}
+
+	# ---------------- 나머지: 일반 사이트 ----------------
+	handle {
+		root * ../site
+		# /ticket 으로 들어와도 ticket.html 을 보여줍니다.
+		try_files {path} {path}.html
+		file_server
+	}
+
+	log {
+		output file ./logs/access.log {
+			roll_size 10MiB
+			roll_keep 5
+		}
+	}
+}

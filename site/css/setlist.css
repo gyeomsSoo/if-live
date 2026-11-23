@@ -1,0 +1,497 @@
+/* 에이전트 B: 셋리스트 전용. sections.css 보다 뒤에 로드되므로 여기서 덮어쓴다.
+   색은 --ink --paper --pink --mint 만. 네온(.glow-pink)은 NOW PLAYING 라벨 한 곳. 모션은 transform/opacity 위주. */
+
+/* ---------- 탭: LIVE 스티커 ---------- */
+.tab { position: relative; }
+.tab__live {
+  position: absolute; top: -12px; right: -8px;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 8px; line-height: 1.2;
+  font-size: var(--fs-label); letter-spacing: .12em;
+  background: var(--ink); color: var(--mint); border: 2px solid var(--mint);
+  pointer-events: none;
+}
+.tab__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--mint); animation: live-dot 1.6s ease-in-out infinite; }
+@keyframes live-dot { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+
+/* ---------- 목록 전환: 탭을 바꾸면 내려가며 사라지고, 새 목록이 아래에서 올라옴 ---------- */
+.setlist__list { perspective: 1400px; transition: transform .26s var(--ease-out), opacity .26s ease-out; }
+.setlist__list.is-leaving { transform: translateY(14px); opacity: 0; transition-duration: .22s; transition-timing-function: ease-in; }
+.setlist__list.is-entering { transform: translateY(20px); opacity: 0; transition: none; }
+
+/* ---------- 곡 행 ---------- */
+.song {
+  flex-wrap: wrap; row-gap: 0; align-content: center;
+  position: relative; transform-origin: 50% 0;
+  transition: transform .22s var(--ease-out);
+}
+.song__num { opacity: .72; transition: opacity .2s ease-out; }
+.song__meta { flex: 1 1 0; min-width: 0; }
+.song__action { flex: 0 0 auto; white-space: nowrap; }
+/* 띄어쓰기 없는 긴 제목/아티스트가 칸을 넘어 겹치지 않게. keep-all 은 그대로, 정말 넘칠 때만 글자 사이를 끊는다 */
+.song__artist, .song__title { overflow-wrap: anywhere; }
+.song__action svg { transition: transform .25s var(--ease-out); }
+
+/* 유튜브 링크가 없는 곡: 누를 수 없음을 회색 라벨로 알림 */
+.song.is-soon { cursor: default; }
+.song.is-soon .song__action { opacity: .6; }
+.song__soon--s { display: none; }
+
+/* NOW PLAYING: 핑크 띠 위에 잉크 칩, 그 안에 민트 이퀄라이저 + 네온 라벨 */
+.song.is-now .song__num { opacity: 1; }
+.song.is-now .song__action { background: var(--ink); color: var(--paper); padding: 6px 12px; gap: 10px; opacity: 1; }
+.song.is-now .eq { color: var(--mint); }
+.song__np-s { display: none; }
+
+/* 펼침: 줄이 위 모서리를 축으로 살짝 젖혀졌다 펴지고, 아래로 재생기가 펼쳐집니다 */
+.song.is-open .song__action svg { transform: rotate(90deg); }
+.song.is-open { animation: song-flip .5s var(--ease-out); }
+@keyframes song-flip { from { transform: rotateX(-14deg); } to { transform: rotateX(0); } }
+.song .song__player { display: grid; grid-template-rows: 0fr; flex: 0 0 100%; width: 100%; padding: 0; transition: grid-template-rows .34s var(--ease-out); }
+.song.is-open .song__player { grid-template-rows: 1fr; }
+.song__player-in { min-height: 0; overflow: hidden; }
+
+
+/* ---------- 호버/포커스 (마우스 환경에서만; 터치는 끈적이지 않게) ---------- */
+@media (hover: hover) and (pointer: fine) {
+  .song:not(.is-soon):not(.is-now):hover { transform: translateX(8px); }
+  .song:hover .song__num { opacity: 1; }
+  .song.is-open:hover { transform: none; }
+}
+.song:focus-visible { transform: translateX(8px); }
+.song:focus-visible .song__num { opacity: 1; }
+.song.is-open:focus-visible, .song.is-now:focus-visible { transform: none; }
+
+/* ---------- 모바일 ---------- */
+@media (max-width: 640px) {
+  .tab__live { top: -12px; right: -6px; padding: 2px 6px; gap: 4px; }
+  .tab__dot { width: 6px; height: 6px; }
+  /* sections.css 가 .song__action span 을 숨기므로 필요한 것만 다시 켬 */
+  .song__action .eq { display: inline-flex; }
+  .song__action .eq span { display: inline-block; }
+  .song__action .song__np { display: inline; }
+  .song__action .song__np-s { display: inline; }
+  .song__action .song__soon--s { display: inline; }
+  .song.is-now .song__action { padding: 4px 8px; gap: 6px; }
+  .song__action svg { width: 18px; height: 18px; }
+}
+
+/* ---------- 모션 감소 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .setlist__list, .song, .song__num, .song__action svg, .song .song__player { transition: none !important; animation: none !important; }
+  .setlist__list.is-leaving, .setlist__list.is-entering { transform: none; opacity: 1; }
+  .tab__dot { animation: none !important; }
+}
+
+/* ============================================================
+   셋리스트를 터미널처럼 — 사이버펑크
+
+   가수 이름이 그냥 초록색 한글이라 밋밋했습니다.
+   번호는 고정폭 숫자로, 가수는 시안색 태그로, 제목은 굵은 한글로.
+   줄에 손을 올리면 왼쪽 데이터 바에 불이 들어오고 제목이 한 번 지직거립니다.
+   색은 이 구역 안에서만 씁니다. 다른 구역의 분홍·민트는 건드리지 않습니다.
+   ============================================================ */
+.setlist {
+  --sl-cyn: #5BE8F0;   /* 가수 · 데이터 바 */
+  --sl-mag: #FF4FA3;   /* 지직거릴 때의 잔상 */
+}
+
+/* 분홍 글로우 옆에 시안색을 한 덩이 더 얹어 구역 전체를 두 색으로 물들입니다.
+   이미 있는 글로우 요소의 배경만 바꿉니다. 자리를 건드리면 안 됩니다. */
+.setlist__glow {
+  background:
+    radial-gradient(circle at 38% 40%, rgba(214,92,142,.26) 0%, rgba(214,92,142,0) 52%),
+    radial-gradient(circle at 62% 58%, rgba(91,232,240,.16) 0%, rgba(91,232,240,0) 48%);
+}
+
+/* ---------- 줄 ----------
+   글씨가 위아래 선에 닿을 듯 말 듯하면 읽기 전에 먼저 답답합니다.
+   줄 높이를 고정하는 대신 위아래 여백으로 벌립니다. */
+.song {
+  isolation: isolate;                 /* 아래 깔개가 구역 배경 뒤로 빠지지 않도록 */
+  min-height: 0; padding-block: 13px;
+  padding-left: 18px;
+  border-bottom: 1px solid rgba(91,232,240,.15);
+  transition: transform .22s var(--ease-out), background-color .2s ease-out;
+}
+/* 왼쪽 데이터 바 — 평소엔 꺼져 있다가 손을 올리면 켜집니다 */
+.song::before {
+  content: ""; position: absolute; left: 0; top: 12px;
+  width: 3px; height: 44px; background: var(--sl-cyn); opacity: .2;
+  transition: opacity .2s ease-out, box-shadow .2s ease-out;
+}
+/* 모서리를 깎은 깔개 */
+.song::after {
+  content: ""; position: absolute; z-index: -1;
+  left: 0; right: 0; top: 0; height: 68px;
+  background: linear-gradient(90deg, rgba(91,232,240,.10) 0%, rgba(91,232,240,0) 58%);
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  opacity: 0; transition: opacity .2s ease-out;
+}
+
+/* ---------- 번호 ---------- */
+.song__num {
+  width: 64px; flex: 0 0 64px;
+  font-family: var(--font-display); font-size: var(--fs-h3);
+  letter-spacing: .04em; color: var(--pink); opacity: .7;
+}
+
+/* ---------- 가수 ---------- */
+.song__artist {
+  flex: 0 0 210px; width: 210px;
+  font-family: var(--font-ko-display); font-weight: 400;   /* 가수는 자이언츠체 Regular, 곡 제목(Bold)과 구분 */
+  font-size: var(--fs-lead); letter-spacing: .04em;
+  color: var(--sl-cyn); text-shadow: 0 0 14px rgba(91,232,240,.28);
+}
+
+/* ---------- 제목 ---------- */
+.song__title {
+  font-family: var(--font-ko-display); font-weight: 900;
+  font-size: calc(var(--fs-h3) * .88);
+  color: var(--paper); letter-spacing: -.015em;
+}
+/* 제목 뒤 괄호(버전 표기): 다음 줄에 작고 가볍게. 긴 표기가 제목 중간에서 줄바뀌던 것을 막습니다 */
+.song__ver {
+  display: block; margin-top: 3px;
+  font-weight: 400; font-size: max(14px, .6em); line-height: 1.3;   /* 폰에서도 14px 아래로는 안 내려감 */
+  letter-spacing: .01em; opacity: .72;
+}
+
+/* ---------- LISTEN ---------- */
+.song__action {
+  font-family: var(--font-display); font-size: var(--fs-label);
+  letter-spacing: .18em; color: var(--pink); opacity: .78;
+  padding: 6px 13px; border: 1px solid rgba(214,92,142,.32);
+  clip-path: polygon(9px 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%, 0 9px);
+  transition: opacity .2s ease-out, border-color .2s ease-out;
+}
+.song.is-soon .song__action {
+  color: rgba(241,234,226,.62); border-color: rgba(241,234,226,.2); opacity: 1;
+}
+
+/* ---------- 손을 올렸을 때 ---------- */
+@media (hover: hover) and (pointer: fine) {
+  .song:not(.is-now):hover::after { opacity: 1; }
+  .song:not(.is-now):hover::before { opacity: 1; box-shadow: 0 0 12px var(--sl-cyn); }
+  .song:hover .song__num { opacity: 1; }
+  .song:not(.is-soon):hover .song__action { opacity: 1; border-color: rgba(214,92,142,.8); }
+  .song:not(.is-now):hover .song__title { animation: slGlitch .4s steps(2, end) 1; }
+  /* 옆으로 밀던 움직임은 깎인 깔개와 겹쳐서 뺍니다 */
+  .song:not(.is-soon):not(.is-now):hover { transform: none; }
+}
+.song:focus-visible { transform: none; }
+.song:focus-visible::after { opacity: 1; }
+.song:focus-visible::before { opacity: 1; box-shadow: 0 0 12px var(--sl-cyn); }
+
+/* 손가락 기기에는 '올려놓기' 가 없습니다. 자바스크립트가 이 클래스를 잠깐 붙여
+   같은 연출을 보여 줍니다 (js/setlist.js).
+
+   올려놓기와 달리 이쪽은 '지나가다 우연히 보는' 것이라 더 세게 갑니다.
+   색만 어긋나면 스크롤 중에 놓칩니다. 글자를 좌우로 튀게 하고 잠깐 잘라 냅니다. */
+/* PC 에서 올려놓았을 때와 똑같은 연출을 그대로 씁니다.
+   따로 만든 세게 버전(slZap)은 걷어냈습니다 — 이게 제일 깔끔합니다. */
+.song__title.is-glitch { animation: slGlitch .4s steps(2, end) 1; }
+/* 폰: 지직거릴 때 줄 전체가 PC 의 '올려놓기' 모습으로 잠깐 켜졌다 꺼집니다 (js/setlist.js 의 zap) */
+.song.is-zap:not(.is-now)::after { opacity: 1; }
+.song.is-zap:not(.is-now)::before { opacity: 1; box-shadow: 0 0 12px var(--sl-cyn); }
+.song.is-zap .song__num { opacity: 1; }
+
+/* 색수차가 어긋났다 돌아오는 한순간 */
+@keyframes slGlitch {
+  0%   { text-shadow: none; }
+  25%  { text-shadow: 2px 0 var(--sl-mag), -2px 0 var(--sl-cyn); }
+  50%  { text-shadow: -3px 0 var(--sl-mag), 3px 0 var(--sl-cyn); }
+  75%  { text-shadow: 1px 0 var(--sl-mag), -1px 0 var(--sl-cyn); }
+  100% { text-shadow: none; }
+}
+
+/* ---------- 지금 이 곡 ---------- */
+.song.is-now::before, .song.is-now::after { display: none; }
+.song.is-now .song__num { color: var(--ink); opacity: 1; text-shadow: none; }
+.song.is-now .song__artist { color: var(--ink); text-shadow: none; }
+.song.is-now .song__action { border-color: transparent; color: var(--paper); clip-path: none; }
+
+/* ---------- 펼쳐졌을 때 ---------- */
+.song.is-open::before { opacity: 1; box-shadow: 0 0 12px var(--sl-cyn); }
+.song.is-open::after { opacity: 1; }
+.song.is-open .song__num { opacity: 1; }
+.song.is-open .song__title { animation: none; }
+.song.is-open .song__action { opacity: 1; border-color: rgba(214,92,142,.8); }
+
+/* ---------- 하이라이트 재생기 (js/player.js) ----------
+   곡 줄을 누르면 그 아래로 펼쳐집니다(예전 유튜브 창 자리).
+   이 구역의 옷 그대로 — 모서리를 깎은 시안 테두리 상자, 핑크 재생 단추와 진행선. */
+.splay {
+  display: flex; align-items: center; gap: 16px;
+  margin: 12px 0 6px; padding: 12px 16px 12px 12px;
+  background: rgba(91,232,240,.07);
+  border: 1px solid rgba(91,232,240,.3);
+  clip-path: polygon(11px 0, 100% 0, 100% calc(100% - 11px), calc(100% - 11px) 100%, 0 100%, 0 11px);
+}
+.splay__btn {
+  flex: none; width: 46px; height: 46px; display: grid; place-items: center;
+  background: var(--pink); color: var(--ink); border: 0; cursor: pointer;
+  transition: transform .15s var(--ease-out), background-color .2s;
+}
+.splay__btn svg { width: 24px; height: 24px; }
+.splay__btn:active { transform: scale(.93); }
+.splay__btn:focus-visible, .splay__prog:focus-visible, .splay__yt:focus-visible { outline: 2px solid var(--sl-cyn); outline-offset: 2px; }
+/* 받는 중: 단추 속 그림이 숨을 쉽니다 */
+.splay[data-state="loading"] .splay__btn svg { animation: splayWait .9s ease-in-out infinite; }
+@keyframes splayWait { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+
+/* 진행 막대 — 보이는 선은 4px, 누르는 자리는 넉넉하게 */
+.splay__prog { position: relative; flex: 1 1 auto; min-width: 60px; height: 28px; cursor: pointer; touch-action: none; }
+.splay__prog::before, .splay__fill { content: ""; position: absolute; left: 0; right: 0; top: 12px; height: 4px; }
+.splay__prog::before { background: rgba(241,234,226,.16); }
+.splay__fill {
+  display: block; background: var(--pink); transform: scaleX(0); transform-origin: 0 50%;
+  box-shadow: 0 0 10px rgba(214,92,142,.7);
+}
+.splay__knob {
+  position: absolute; top: 8px; left: 0; width: 12px; height: 12px; margin-left: -6px;
+  background: var(--paper); border-radius: 50%; box-shadow: 0 0 0 3px rgba(214,92,142,.45);
+}
+.splay__time {
+  flex: none; font-family: var(--font-mono); font-size: 15px; letter-spacing: .04em;
+  color: rgba(241,234,226,.5); font-variant-numeric: tabular-nums;
+}
+.splay__time b { font-weight: 400; color: var(--paper); }
+.splay__msg { flex: none; font-family: var(--font-ko); font-size: 13px; color: #F08B89; }
+.splay__msg:empty { display: none; }
+.splay__yt {
+  flex: none; padding: 8px 11px; white-space: nowrap; text-decoration: none;
+  font-family: var(--font-ko); font-weight: 700; font-size: 13px; letter-spacing: 0;
+  color: rgba(241,234,226,.75); border: 1px solid rgba(241,234,226,.2);
+  transition: border-color .2s, color .2s;
+}
+@media (hover: hover) and (pointer: fine) {
+  .splay__btn:hover { background: #E476A3; }
+  .splay__yt:hover { color: var(--pink); border-color: var(--pink); }
+}
+/* 공연 당일 핑크 줄 안에서는 상자를 어둡게 */
+.song.is-now .splay { background: rgba(14,11,12,.14); border-color: rgba(14,11,12,.3); }
+.song.is-now .splay__time, .song.is-now .splay__time b { color: var(--ink); }
+
+@media (max-width: 640px) {
+  .splay { gap: 11px; margin: 8px 0 4px; padding: 9px 12px 9px 9px; }
+  .splay__btn { width: 42px; height: 42px; }
+  .splay__btn svg { width: 22px; height: 22px; }
+  .splay__time { font-size: 13px; }
+  .splay__yt { padding: 7px 8px; font-size: 12px; }
+}
+@media (max-width: 380px) {
+  .splay__yt { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .splay[data-state="loading"] .splay__btn svg { animation: none; }
+}
+
+/* ---------- 좁은 화면 ---------- */
+@media (max-width: 640px) {
+  /* 폰에서는 가수와 제목이 두 줄로 쌓여서 더 답답했습니다 */
+  .song { padding-left: 13px; padding-block: 12px; }
+  .song__meta { gap: 4px; }
+  .song__title { font-size: 22px; line-height: 1.25; }
+  .song::before { top: 14px; height: 30px; width: 2px; }
+  .song::after { height: 100%; clip-path: polygon(0 0, calc(100% - 11px) 0, 100% 11px, 100% 100%, 11px 100%, 0 calc(100% - 11px)); }
+  .song__num { width: 34px; flex: 0 0 34px; font-size: var(--fs-lead); }
+  .song__artist { flex: 1 1 auto; width: auto; font-size: 13px; letter-spacing: .05em; line-height: 1.2; }
+  .song__action { padding: 5px 9px; letter-spacing: .14em; }
+}
+
+/* ---------- 모션 감소 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .song .song__title { animation: none !important; }
+}
+
+/* ---------- 셋리스트 덮개 ----------
+   아직 손보는 중일 때 목록 대신 나옵니다 (js/setlist.js).
+   이 구역의 말투 그대로 — 모서리를 깎고 시안색 실선을 두릅니다. */
+.slcover {
+  position: relative; display: grid; justify-items: center; gap: 12px;
+  padding: 46px 24px 40px; text-align: center;
+  border: 1px solid rgba(91,232,240,.28);
+  background:
+    repeating-linear-gradient(135deg, rgba(91,232,240,.05) 0 12px, rgba(91,232,240,0) 12px 26px),
+    linear-gradient(180deg, rgba(91,232,240,.06) 0%, rgba(91,232,240,0) 70%);
+  clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
+}
+.slcover__tape { transform: rotate(-3deg); }
+.slcover__en { margin: 6px 0 0; color: var(--paper); line-height: .95; }
+.slcover__ko {
+  margin: 0; font-family: var(--font-ko-display); font-weight: 900;
+  font-size: var(--fs-h3); letter-spacing: -.02em; color: #5BE8F0;
+}
+.slcover__sub { margin: 0; font-size: var(--fs-label); color: rgba(241,234,226,.55); line-height: 1.7; }
+.slcover__stages {
+  margin: 10px 0 0; padding-top: 14px; font-size: var(--fs-label); letter-spacing: .22em;
+  color: rgba(241,234,226,.45); border-top: 1px solid rgba(91,232,240,.18); width: min(100%, 320px);
+}
+@media (max-width: 640px) {
+  .slcover { padding: 34px 16px 30px; gap: 10px; }
+  .slcover__ko { font-size: var(--fs-lead); }
+}
+
+/* ---------- 미리보기 표시 ----------
+   덮여 있는데 나만 보고 있다는 것을 잊지 않도록 아래에 띄워 둡니다. */
+.peek {
+  position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 70;
+  display: flex; align-items: center; gap: 12px;
+  padding: 9px 12px 9px 16px; max-width: calc(100vw - 24px);
+  font-family: var(--font-ko); font-weight: 600; font-size: var(--fs-label);
+  color: var(--ink); background: #5BE8F0;
+  box-shadow: 4px 4px 0 rgba(14,11,12,.6);
+}
+.peek button {
+  flex: none; padding: 6px 11px; font: inherit; color: #5BE8F0; background: var(--ink);
+  border: 0; cursor: pointer;
+}
+@media (max-width: 640px) {
+  .peek { font-size: 13px; padding: 8px 10px 8px 13px; gap: 9px; }
+}
+
+/* ---------- 기대돼요 (곡마다 하트) ----------
+   제목과 LISTEN 사이. 누르면 분홍으로 차오르며 톡 커지고 작은 점이 튀어 나갑니다.
+   서버가 답하기 전엔 hidden 이라 자리도 차지하지 않습니다 (js/setlist.js). */
+.song__like {
+  flex: 0 0 auto; position: relative;
+  display: inline-flex; align-items: center; gap: 6px;
+  min-width: 44px; min-height: 44px; padding: 0 10px; margin-right: 6px;   /* 손가락 크기 */
+  background: none; border: 0; color: rgba(241,234,226,.55); cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.song__like[hidden] { display: none; }
+.song__heart {
+  width: 22px; height: 22px; flex: 0 0 auto;
+  fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round;
+  transition: transform .2s var(--ease-out), fill .2s ease-out;
+}
+.song__likes { font-size: var(--fs-label); letter-spacing: .06em; line-height: 1; }
+.song__likes:empty { display: none; }
+.song__like.is-on { color: var(--pink); }
+.song__like.is-on .song__heart { fill: currentColor; filter: drop-shadow(0 0 8px rgba(214,92,142,.6)); }
+@media (hover: hover) and (pointer: fine) {
+  .song__like:hover { color: var(--pink); }
+  .song__like:hover .song__heart { transform: scale(1.12); }
+}
+.song__like:focus-visible { outline: 2px solid var(--sl-cyn); outline-offset: 2px; }
+.song__like.is-pop .song__heart { animation: likePop .45s var(--ease-out); }
+@keyframes likePop {
+  0% { transform: scale(1); } 35% { transform: scale(1.45); } 70% { transform: scale(.9); } 100% { transform: scale(1); }
+}
+.song__spark {
+  position: absolute; left: 21px; top: 50%; width: 5px; height: 5px; margin: -2.5px;
+  border-radius: 50%; background: var(--pink); pointer-events: none;
+  animation: likeSpark .6s ease-out forwards;
+}
+@keyframes likeSpark {
+  from { transform: translate(0, 0) scale(1); opacity: 1; }
+  to { transform: translate(var(--dx), var(--dy)) scale(.3); opacity: 0; }
+}
+/* 공연 당일 NOW PLAYING 줄은 분홍 바탕이라 검게 */
+.song.is-now .song__like, .song.is-now .song__like.is-on { color: var(--ink); }
+
+/* ---------- 재생수 · 기대돼요 (두 칸) ----------
+   🎧 재생수와 ♡ 기대돼요를 나란히 두고, 숫자는 아이콘 밑 가운데에 둡니다 — 한 자리든 세 자리든 늘 균형이 맞습니다.
+   재생수 = 하이라이트를 튼 횟수. 한 사람이 한 곡에 하루 5번까지만 셉니다(서버). 0 이면 칸째 숨깁니다.
+   두 칸은 같은 틀(아이콘 + 숫자 자리)이라 기대돼요가 0 이어도 두 아이콘 높이가 맞습니다. */
+.song__stats { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 4px; margin-right: 6px; }
+.song__stats:not(:has(> :not([hidden]))) { display: none; }     /* 둘 다 숨었으면 자리도 비움 */
+.song__views,
+.song__stats .song__like {
+  flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+  width: 44px; min-width: 44px; min-height: 44px; padding: 0; margin: 0;
+}
+.song__views { display: inline-flex; white-space: nowrap; color: rgba(241,234,226,.55); }
+.song__views[hidden] { display: none; }
+.song__views b { font-weight: 400; font-size: var(--fs-label); letter-spacing: .06em; line-height: 1; }
+.song__vicon, .song__stats .song__heart { width: 18px; height: 18px; flex: none; display: block; }
+.song__stats .song__likes { display: block; min-height: 1em; line-height: 1; }   /* 0 이어도 숫자 자리는 비워 둠 */
+.song__stats .song__spark { left: 50%; top: calc(50% - 9.5px); }                 /* 반짝이는 하트 가운데에서 */
+.song.is-now .song__views { color: rgba(10,10,10,.6); }
+@media (max-width: 640px) {
+  .song__like { padding: 0 6px; margin-right: 0; gap: 4px; }
+  .song__heart { width: 20px; height: 20px; }
+  .song__spark { left: 16px; }
+  .song__stats { margin-right: 0; }
+  .song__views, .song__stats .song__like { width: 34px; min-width: 34px; }
+}
+/* 작은 폰: 두 칸을 좁혀 지금 하트 자리만큼만 씁니다 (제목 칸을 줄이지 않게).
+   하트 누르는 자리는 위아래 · 오른쪽으로 넓혀 손가락 크기를 지킵니다. */
+@media (max-width: 440px) {
+  .song__stats { gap: 2px; }
+  .song__views, .song__stats .song__like { width: 28px; min-width: 28px; }
+  .song__vicon, .song__stats .song__heart { width: 16px; height: 16px; }
+  .song__stats .song__like::after { content: ""; position: absolute; inset: -10px -8px -10px -2px; }
+}
+/* 아주 작은 폰(320px 등): 두 줄 [♡ 숫자 / 🎧 숫자] — 옆으로 가장 좁습니다 */
+@media (max-width: 340px) {
+  .song__stats { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .song__views, .song__stats .song__like {
+    flex-direction: row; justify-content: flex-start; gap: 5px;
+    width: auto; min-width: 0; min-height: 0;
+  }
+  .song__stats .song__like { order: -1; }
+  .song__stats .song__likes { min-height: 0; }
+  .song__stats .song__likes:empty { display: none; }
+  .song__stats .song__spark { left: 8px; top: 50%; }
+  .song__stats .song__like::after { inset: -12px -10px -6px -6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .song__like.is-pop .song__heart, .song__spark { animation: none; }
+}
+
+/* ---------- 셋리스트가 바뀌었을 때 한 번 뜨는 안내 창 (js/setlist-note.js) ----------
+   사이트 공용 창(#modal) 안에 들어갑니다. 부마다 [추가 · 빠짐] 을 한 줄씩.
+   작은 폰이나 글자를 키운 폰에서도 창이 화면을 넘지 않게 높이를 막습니다 (--setnote-vh 는 실제 화면 높이, js).
+   넘치는 내용은 가운데 칸만 밀어서 보고, '바뀐 셋리스트 보기' 는 그 칸 밖이라 늘 보입니다.
+   뺀 값 = 창 안쪽 여백 · 테두리 · 위아래 틈 · 그림자. */
+.setnote { display: flex; flex-direction: column; gap: 12px; max-height: calc(var(--setnote-vh, 100vh) - 104px); }
+.setnote__scroll {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+  display: grid; gap: 10px; align-content: start; padding: 3px 6px 3px 2px;
+}
+.setnote__scroll.is-more {
+  -webkit-mask-image: linear-gradient(#000 calc(100% - 30px), transparent);
+  mask-image: linear-gradient(#000 calc(100% - 30px), transparent);
+}
+.setnote__tape { justify-self: start; font-size: var(--fs-label); padding: 5px 14px; transform: rotate(-1.5deg); }
+.setnote__title {
+  margin: 2px 0 0; font-family: var(--font-ko-display); font-weight: 700;
+  font-size: var(--fs-h3); line-height: 1.2; letter-spacing: -.01em; color: var(--ink);
+}
+.setnote__sub { margin: 0; font-size: var(--fs-label); line-height: 1.5; color: rgba(14,11,12,.72); word-break: keep-all; }
+.setnote__list { list-style: none; margin: 2px 0 0; padding: 0; display: grid; gap: 8px; }
+.setnote__stage {
+  display: grid; grid-template-columns: 50px minmax(0, 1fr); gap: 12px; align-items: start;
+  padding: 10px 12px; border: 2px solid var(--ink); background: rgba(255,255,255,.55);
+}
+.setnote__label {
+  display: grid; place-items: center; height: 38px; background: var(--ink); color: var(--pink);
+  font-family: var(--font-ko-display); font-weight: 700; font-size: 18px; line-height: 1;
+}
+.setnote__rows { display: grid; gap: 6px; min-width: 0; }
+.setnote__row { display: flex; align-items: flex-start; gap: 8px; min-width: 0; }
+.setnote__k {
+  flex: none; padding: 1px 7px; border: 2px solid var(--ink); background: var(--paper);
+  font-size: 14px; font-weight: 700; line-height: 1.5; color: var(--ink);
+}
+.setnote__k--add { background: var(--mint); }
+.setnote__songs { display: flex; flex-wrap: wrap; gap: 2px 0; padding-top: 2px; min-width: 0; }
+/* 곡 사이에서 먼저 줄을 바꾸고, 곡 하나가 칸보다 길 때만 곡 안에서 낱말 단위로 넘깁니다 */
+.setnote__song { font-size: 15px; font-weight: 700; line-height: 1.5; word-break: keep-all; color: var(--ink); text-decoration: none; }
+.setnote__song:not(:last-child)::after { content: ","; margin-right: .4em; }
+s.setnote__song { font-weight: 500; color: rgba(14,11,12,.6); text-decoration: line-through; text-decoration-thickness: 2px; }
+s.setnote__song:not(:last-child)::after { text-decoration: none; display: inline-block; }
+.setnote__txt { padding-top: 2px; font-size: 15px; line-height: 1.5; color: rgba(14,11,12,.8); }
+.setnote__go { flex: none; padding-right: 5px; }
+.setnote__go .btn { width: 100%; font-size: var(--fs-body); padding: 12px 18px; box-shadow: 5px 5px 0 var(--ink); }
+@media (max-width: 640px) {
+  .setnote { gap: 10px; max-height: calc(var(--setnote-vh, 100vh) - 88px); }
+  .setnote__scroll { gap: 8px; }
+  .setnote__title { font-size: 22px; }
+  .setnote__stage { grid-template-columns: 42px minmax(0, 1fr); gap: 10px; padding: 8px 10px; }
+  .setnote__label { height: 32px; font-size: 16px; }
+  .setnote__go .btn { font-size: 17px; padding: 10px 14px; }
+}

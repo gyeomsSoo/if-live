@@ -1,0 +1,6 @@
+# I.F 2026 LIVE
+# 예매 화면과 예매 자료는 검색에 걸리지 않게 합니다.
+User-agent: *
+Disallow: /ticket
+Disallow: /api/
+Allow: /

@@ -1,0 +1,522 @@
+/* ============================================================
+   mobile.css — 폰 화면 마무리 (맨 마지막에 로드되므로 여기서 덮어씁니다)
+
+   데스크탑은 공들여 잡았는데 폰은 자동으로 접히게만 둔 탓에
+   가로 넘침, 겹침, 자간/행간, 터치 반응이 부실했던 것을 바로잡습니다.
+   ============================================================ */
+
+/* ---------- 0. 가로 스크롤 원천 차단 ----------
+   clip 은 hidden 과 달리 스크롤 컨테이너를 만들지 않아,
+   iOS 에서 body:overflow-x:hidden 이 새는 문제까지 막습니다. */
+html { overflow-x: clip; }
+body { overflow-x: clip; max-width: 100%; }
+
+/* 건너뛰기 링크: 음수 좌표 대신 표준 방식으로 숨깁니다. */
+.skip {
+  position: absolute; left: 8px; top: 8px;
+  width: 1px; height: 1px; padding: 0; margin: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+.skip:focus {
+  width: auto; height: auto; padding: 8px 14px;
+  clip-path: none; white-space: normal; z-index: 100;
+}
+
+/* 무대 시간 칩의 무대 이름 (데스크탑에서는 그냥 한 줄로 보이게) */
+.ticket__stages span b { font-weight: 400; margin-right: .5em; }
+
+/* ============================================================
+   아래는 화면 크기와 상관없이 적용되는 마무리 보정입니다.
+   ============================================================ */
+
+/* ---------- 위쪽 흐르는 띠 ----------
+   아래쪽 띠와 반대 방향으로 흘러서 첫 화면을 위아래로 감쌉니다. */
+.ticker__track--r { animation: tickr 34s linear infinite; }
+
+/* ---------- 카운트다운이 1초마다 밀리던 문제 ----------
+   Anton 은 숫자마다 폭이 달라서 값이 바뀔 때 줄 전체가 흔들렸습니다.
+   숫자 칸을 "00" 너비(2ch)로 붙들어 둡니다. 글자 크기에 따라 같이 줄어들어
+   화면 크기와 무관하게 안전합니다. 고정 px 로 잡으면 데스크탑에서 칸이
+   넓어져 포스터를 덮습니다. */
+.cv {
+  display: block;
+  min-width: 2ch;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.cc { flex: 0 0 auto; }
+.badge__d { display: block; text-align: center; }
+.countdown__label { min-height: 1.2em; }
+
+/* 포스터가 스크롤 중에 떨리지 않도록 */
+.hero__poster-frame { backface-visibility: hidden; transform: translateZ(0); }
+
+/* ============================================================
+   글꼴 배치 — 자리마다 역할을 나눕니다.
+
+   크고 짧은 자리에만 손글씨 계열을 쓰고, 눈으로 따라 읽는 글은
+   전부 프리텐다드로 둡니다. 와일드각을 라벨·계좌번호까지 쓰던 동안
+   글씨는 멋있었지만 읽히지가 않았습니다.
+
+     Anton          : 영문 대제목 (포스터의 얼굴)
+     자이언츠체     : 한글 제목 · 단추 · 장소 스티커 · 도장 (2026-10-10, Gothic A1 · Black Han Sans 자리를 넘겨받음)
+                      좁고 단단한 골격이 Anton 과 같은 결. Regular · Bold 두 가지
+     Black Han Sans : 그림 속 가게 간판 글씨만
+     Pretendard     : 읽는 글 전부 (본문, 라벨, 주소, 계좌, 예매번호)
+     Share Tech Mono: 숫자와 영문 라벨 — 터미널
+   ============================================================ */
+
+/* 히어로 — 장소 이름은 가장 세게 (자이언츠체 Bold) */
+.hero__venue { font-family: var(--font-ko-display); font-weight: 700; letter-spacing: 0; }
+
+/* 티켓 혜택 줄에는 = 기호가 들어갑니다. Black Han Sans 는 이 기호를 짧고 두꺼운
+   덩어리로 그려서 점처럼 보입니다. 제목 글꼴(Gothic A1 900)에 맡깁니다. */
+.ticket__perk { letter-spacing: -.01em; }
+
+/* 셋리스트는 setlist.css 에서 따로 차려 입습니다 (사이버펑크). 여기서는 건드리지 않습니다. */
+
+/* ---------- 종이 위 글씨 대비 (모든 화면 공통) ----------
+   분홍 #D65C8E 과 민트 #4DBE8C 는 크림색 종이 위에서 대비가 2~3:1 밖에 안 나옵니다.
+   글씨로 쓸 때만 한 단 진한 색으로 바꿉니다. 면으로 쓸 때는 그대로 둡니다. */
+.ticket__main .c-pink,
+.ticket__grid dt,
+.ncard .c-pink,
+.notice__contact .c-pink,
+.tkcard--form .c-pink,
+.tkcard--price .c-pink,
+.price__when { color: var(--pink-on-paper); }
+.ncard__en { color: var(--pink-on-paper) !important; }
+.ncard--mint .ncard__en { color: var(--mint-on-paper) !important; }
+
+/* 작은 영문 라벨은 자간을 줄여야 읽힙니다 */
+.t-label { letter-spacing: .1em; }
+
+/* 읽어야 하는 글은 모두 같은 옷을 입힙니다.
+   글꼴·굵기·줄간격·자간을 한 벌로 묶어 두면 페이지마다 들쭉날쭉하지 않습니다. */
+.ncard__body p,
+.notice__intro,
+.ticket__how,
+.setlist__note,
+.sponsor__note,
+.info__hint,
+.tkcard__lead,
+.sphead__sub {
+  font-family: var(--font-body);
+  font-weight: 500;
+  line-height: 1.78;
+  letter-spacing: -.005em;
+}
+.stamp__text { font-family: var(--font-ko-display); font-weight: 700; }
+
+/* 후원사 — 스티커는 제목 글꼴 */
+.chip { font-weight: 700; }
+
+/* 히어로 하단 안내는 두 줄로 나눠 읽기 좋게 */
+.hero__caption { display: flex; flex-direction: column; gap: 4px; line-height: 1.5; }
+.hero__caption-line { display: block; }
+/* 1 TICKET = 1 BEER: 좁은 영문 대문자(Anton)라 윗줄과 같은 자간(.1em)이면 "1 · = · 1" 둘레가 벌어져 낱말이 흩어져 보였습니다.
+   글자 사이는 조금 좁히고 낱말 사이는 더 당겨 한 덩어리로 읽히게 합니다 */
+.hero__perk { letter-spacing: .08em; word-spacing: -.14em; }
+
+/* ---------- 요금표: 사전 예매 / 현장 구매 ---------- */
+.price { display: flex; flex-direction: column; gap: 2px; margin: 2px 0 6px; }
+/* 가격 글꼴이 늦게 받아지거나 다른 글꼴로 그려져 줄이 넓어지면, 딱지가 오른쪽 띠(ADMIT ONE)로
+   밀려나지 않고 아랫줄로 내려갑니다 */
+.price__row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+/* 현장 구매가는 "할인 전 가격"이 아니라 더 비싼 가격이라 취소선을 긋지 않습니다.
+   크기와 진하기만으로 사전 예매가를 주인공으로 세웁니다. */
+.price__amount {
+  font-size: calc(var(--fs-num) * .6);
+  line-height: 1.1;
+  color: var(--ink);
+  opacity: .6;
+}
+.price__when {
+  font-family: var(--font-display);
+  flex: 0 0 auto; white-space: nowrap;
+  font-size: var(--fs-label);
+  letter-spacing: .1em;
+  color: var(--ink);
+  opacity: .6;
+}
+/* 사전 예매가가 주인공. 딱지와 한 줄에 같이 앉아야 해서 조금 눌러 둡니다 */
+.price__row--best .price__amount {
+  font-size: calc(var(--fs-num) * .86);
+  color: var(--paper);
+  opacity: 1;
+  text-shadow: 3px 3px 0 var(--ink);
+}
+.price__row--best .price__when {
+  color: var(--ink);
+  opacity: 1;
+  background: var(--paper);
+  padding: 3px 9px;
+}
+.price__note {
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  letter-spacing: .04em;
+  color: var(--ink);
+  opacity: .75;
+}
+
+/* ---------- 티켓·영수증의 숫자 ----------
+   Share Tech Mono 에는 ₩ 가 없어 다른 글꼴에서 끌어옵니다. 그러면 ₩ 가
+   숫자에 달라붙어 취소선처럼 보이고, 쉼표 앞뒤는 반대로 크게 벌어집니다.
+   금액은 한 글꼴 안에서 고정폭 숫자로 씁니다. 전화번호와 바코드는 그대로. */
+.barcode + .ticket__admit,
+.contact__phone {
+  font-family: var(--font-mono);
+}
+.ticket__price,
+.price__amount {
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.015em;
+}
+.ticket__addr, .ticket__addr .addr__link { font-weight: 600; letter-spacing: -.005em; }
+
+/* ---------- 버튼 안쪽 여유 (글자가 테두리에 붙던 것) ---------- */
+.btn { padding-inline: 22px; }
+
+/* ---------- 1. 한글 가독성 (모든 화면 공통) ---------- */
+p, .ncard__body p, .notice__intro, .ticket__how, .setlist__note, .sponsor__note {
+  text-wrap: pretty;
+}
+
+@media (max-width: 640px) {
+
+  /* ---------- 2. 상단바 균형 ----------
+     티켓 버튼이 너무 커서 로고를 눌러버리던 것을 정리합니다. */
+  .nav__logo img { height: 42px; }
+  .nav__ticket {
+    font-size: var(--fs-label);
+    letter-spacing: .06em;
+    padding: 9px 13px;
+    box-shadow: 3px 3px 0 var(--paper);
+  }
+  .nav__right { gap: 8px; }
+
+  /* ---------- 3. 히어로 ---------- */
+
+  /* 소개 문구: 자간을 줄이고 두 줄이 고르게 떨어지도록 */
+  .hero__eyebrow {
+    letter-spacing: .12em;
+    line-height: 1.6;
+    max-width: 19em;
+    margin-inline: auto;
+    text-wrap: balance;
+    opacity: .7;
+  }
+
+  /* TONIGHT 네온: 포스터 오른쪽은 이제 장소 스티커와 시간표가 씁니다.
+     왼쪽 위 모서리로 옮겨 둘이 부딪히지 않게 합니다. */
+  .hero__tonight {
+    right: auto; left: -12px;
+    top: -18px;
+    font-size: 13px;
+    letter-spacing: .12em;
+    padding: 5px 11px;
+    border-width: 2px;
+    border-radius: 10px;
+  }
+
+  /* 포스터: 마우스가 없으니 천천히 숨 쉬게 하고, 손가락으로 문지르면 기울어집니다. */
+  .hero__poster { touch-action: pan-y; }
+  .hero__poster-frame { animation: posterFloat 7s ease-in-out infinite; }
+  /* 문지르는 동안에는 떠 있는 애니메이션을 멈춰 두 움직임이 겹치지 않게 */
+  .hero__poster.is-touched .hero__poster-frame { animation: none; }
+  @keyframes posterFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-9px) rotate(.5deg); }
+  }
+
+  /* 제목 줄간격 */
+
+
+  /* D-day 배지: 돌아가는 테두리 글자를 되살립니다. 이게 이 사이트의 얼굴입니다.
+     배지가 너무 크면 옆의 HOURS 라벨을 그림자로 덮어버려서 조금 줄였습니다. */
+  .badge { width: 110px; height: 110px; }
+  .badge__disc { box-shadow: 0 0 0 4px var(--paper), 6px 6px 0 4px var(--ink); }
+  .badge__rim { display: block; }
+  .badge__rim text { font-size: 13px; }
+  .badge__l { display: block; font-size: 9px; letter-spacing: .16em; }
+  .badge__d { line-height: .88; }
+
+  .countdown { gap: 16px; align-items: center; }
+  .countdown__nums { gap: 6px; }
+  .countdown__row { gap: 10px; }
+  .cl { letter-spacing: .08em; opacity: .85; }
+  .cc { padding-bottom: 18px; opacity: .3; }
+
+  /* 날짜 블록 */
+  .hero__date { gap: 2px; }
+  .hero__weekday { letter-spacing: .18em; opacity: .85; }
+  .hero__right { gap: 14px; }
+  .hero__caption { opacity: .6; letter-spacing: .1em; }
+
+  /* ---- 폰 히어로 ----
+     한 화면에 다 넣으려고 두 칸으로 쪼갰더니 포스터가 118px 까지 줄고
+     글이 서로 붙어 중구난방이 됐습니다. 다시 한 줄씩 쌓습니다.
+
+     첫 화면에는 움직이는 것들 — 포스터, 제목, D-day 와 카운트다운 — 을 두고,
+     버튼과 요금 안내는 접힌 자리 아래로 내려가도 괜찮습니다. */
+  .hero { padding-top: 22px; min-height: 0; }
+  /* 소개 문구는 한 줄로 쭉. max-width 가 두 줄로 접고 있었습니다.
+     좁은 화면에서도 넘치지 않도록 글자 크기를 화면 폭에 맞춰 줄입니다. */
+  .hero__eyebrow {
+    font-size: clamp(8.5px, 2.7vw, 11px); letter-spacing: .12em;
+    line-height: 1.5; max-width: none; white-space: nowrap;
+  }
+  /* 포스터 옆 빈자리에 무대 시간표를 세웁니다. 나머지는 한 줄씩 그대로 쌓입니다.
+     .hero__left / .hero__right 를 display:contents 로 풀어 그 안의 것들이
+     바로 격자 칸에 앉게 하고 자리를 하나씩 지정합니다. */
+  .hero__grid {
+    margin-top: 20px;
+    display: grid; grid-template-columns: 190px auto;
+    /* 칸을 화면 끝까지 늘리면 포스터는 왼쪽 끝에, 시간표는 오른쪽에 떠서
+       둘이 따로 놉니다. 짝을 통째로 가운데 세우고 사이를 좁혀 한 덩어리로 읽히게 합니다. */
+    justify-content: center;
+    gap: 30px 20px; align-items: center; justify-items: center;
+  }
+  .hero__left, .hero__right { display: contents; }
+  .hero__poster { grid-column: 1; grid-row: 1; width: 190px; }
+  .hero__when { grid-column: 2; grid-row: 1; justify-self: start; gap: 15px; }
+  .hero__stages { gap: 7px; }
+  .hero__headline { grid-column: 1 / -1; grid-row: 2; gap: 10px; }
+  .hero__headline h1 { font-size: 54px; line-height: .92; }
+  .countdown { grid-column: 1 / -1; grid-row: 3; }
+  .hero__date { grid-column: 1 / -1; grid-row: 4; }
+  /* 포스터 옆 칸은 장소 스티커 + 무대 시간표가 함께 씁니다 */
+  /* 줄 간격을 30px 로 늘렸지만 여기부터는 붙어 있는 편이 낫습니다 */
+  .hero__cta { grid-column: 1 / -1; grid-row: 5; }
+  .hero__caption { grid-column: 1 / -1; grid-row: 6; margin-top: -16px; margin-bottom: 8px; }   /* 아래 분홍 띠에 붙지 않게 */
+  /* 좁은 칸이라 무대 이름 아래에 시간을 두 줄로 놓습니다 */
+  .hero__stages span { flex-direction: column; align-items: flex-start; gap: 0; line-height: 1.2; font-size: var(--fs-body); letter-spacing: .02em; }
+  .hero__stages b { min-width: 0; font-size: 12px; letter-spacing: .18em; line-height: 1.4; }
+
+  /* 버튼 한 쌍은 가운데에. 크기·여백은 바탕 규칙(sections.css)이 글자 크기에 맞춰 정합니다 */
+  .hero__cta {
+    gap: 10px;
+    /* 줄 간격은 30px 이지만 여기부터는 붙어 있는 편이 낫습니다 */
+    margin: -10px auto 0;
+  }
+  .hero__cta .btn { min-height: 46px; }   /* 손가락으로 누르기 넉넉한 높이 */
+  /* 순서·색·보조 버튼 테두리는 바탕 규칙(sections.css)이 정합니다.
+     여기서는 좁은 화면에 맞게 주 버튼 그림자만 줄입니다. */
+  .hero__cta .btn--pink { box-shadow: 4px 4px 0 var(--paper); }
+  .info__actions { gap: 10px; }
+  .info__actions .btn { padding: 14px 10px; gap: 7px; }
+
+  /* ---------- 4. 공연 안내 ---------- */
+
+  /* 무대 시간: 2+1 로 어긋나던 것을 세 줄로 가지런히 */
+  .ticket__stages { display: grid; grid-template-columns: 1fr; gap: 6px; }
+  .ticket__stages span {
+    display: flex; align-items: baseline; gap: 10px;
+    font-size: var(--fs-label); letter-spacing: .08em;
+    padding: 9px 14px;
+  }
+  .ticket__stages span b { font-weight: 400; color: var(--pink); min-width: 3em; }
+
+  /* 두 칸으로 나누면 "2026.11.05 (THU)" 와 "19:00 ~ 02:00" 이 두 줄로 쪼개집니다.
+     한 줄에 항목 하나씩, 이름은 왼쪽 값은 오른쪽으로 세웁니다. */
+  .ticket__grid { grid-template-columns: 1fr; gap: 13px; }
+  .ticket__grid > div,
+  .ticket__grid > div:nth-child(n+3) {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  .ticket__grid dt { flex: 0 0 auto; padding-top: 2px; }
+  .ticket__grid dd { text-align: right; line-height: 1.2; }
+  .ticket__grid dd small { display: block; margin-top: 2px; }
+  /* 주소는 길어서 오른쪽 정렬하면 "41" 만 떨어집니다. 한 칸을 통째로 씁니다. */
+  .ticket__grid > div:last-child {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .ticket__grid > div:last-child dd { text-align: left; }
+  .ticket__addr { line-height: 1.45; }
+
+  /* 섹션 부제가 "JECHEON" 만 다음 줄로 떨어지던 것 */
+  .sec-head__right {
+    letter-spacing: .1em;
+    line-height: 1.7;
+    text-wrap: balance;
+    opacity: .85;
+  }
+
+  /* ---------- 5. 셋리스트 ---------- */
+  /* 무대 탭: 글씨를 한 단씩 키웁니다. 그만큼 탭 사이와 자간을 줄여
+     '19:00 ~ 21:00' 이 두 줄로 접히지 않게 자리를 만듭니다. */
+  .setlist__tabs { gap: 10px; }
+  /* 탭 하나가 쓸 수 있는 폭은 화면 너비에 딸려 갑니다.
+     고정 크기로 두면 좁은 기기에서 '19:00 ~ 21:00' 이 두 줄로 접힙니다. */
+  .tab { font-size: clamp(16px, 5.1vw, 21px); padding: 10px 4px; gap: 3px; }
+  .tab small { font-size: clamp(12.5px, 4.1vw, 17px); letter-spacing: .02em; white-space: nowrap; }
+
+  .song { gap: 10px; }
+  .song__meta { gap: 3px; }
+
+  /* COMING SOON 이 너무 흐려서 눌러도 되는지 몰랐던 것을 또렷하게 */
+  /* COMING SOON 이 너무 흐려서 눌러도 되는지 몰랐던 것.
+     모서리를 깎은 테두리는 setlist.css 와 같은 모양으로 맞춥니다. */
+  .song.is-soon .song__action {
+    opacity: 1;
+    font-size: var(--fs-label);
+    letter-spacing: .1em;
+    padding: 5px 9px;
+  }
+  .song.is-soon .song__action span { opacity: .55; }
+
+  /* ---------- 6. 유의사항 ---------- */
+  /* ---- 안내 및 유의사항: 폰에서 읽기 편하게 ----
+     번호 도장은 작게, 한글 제목은 크게, 본문은 넉넉한 줄간격으로. */
+  .ncard { padding: 18px 16px; gap: 13px; align-items: flex-start; }
+  .ncard svg { width: 44px; height: 44px; margin-top: 2px; }
+  .ncard__body { gap: 3px; }
+  .ncard__title { font-size: 21px; line-height: 1.25; }
+  .ncard__en { font-size: 11px; letter-spacing: .14em; }
+  .ncard__body p {
+    margin-top: 7px; font-size: 16px; line-height: 1.78;
+    letter-spacing: -.005em; color: rgba(14,11,12,.88);
+  }
+
+  .notice__banner-wrap { padding-inline: 4px; }
+  /* 도장 — 바탕도 그림자도 없이 잉크만. 글자만큼만 차지합니다.
+     잉크 번짐 마스크만 끕니다: 글자가 작아 노이즈가 획을 먹었던 적이 있습니다. */
+  .stamp {
+    width: auto; max-width: 100%;
+    padding: 12px 22px 10px; gap: 2px; border-width: 4px;
+    -webkit-mask-image: none; mask-image: none;
+  }
+  .stamp::after { display: block; inset: -3px; border-width: 2px; }
+  .stamp__text, .stamp__sub { text-shadow: none; -webkit-text-stroke: 0; }
+  .stamp__text { font-family: var(--font-ko-display); font-weight: 700; font-size: 26px; letter-spacing: 0; white-space: nowrap; }
+  .stamp__sub { font-size: 11px; letter-spacing: .2em; opacity: .9; }
+
+  /* 도장 바로 아래 카드라 왼쪽에 붙어 있으면 균형이 깨집니다 */
+  .notice__contact { padding: 22px 18px; gap: 16px; text-align: center; align-items: center; }
+  .notice__contact > div, .notice__contact .contact__list { width: 100%; }
+  .notice__contact-title { text-align: center; }
+  .contact__who, .contact__row { justify-content: center; }
+  .notice__ticketline { justify-content: center; text-align: center; }
+  .notice__intro { font-size: 16px; line-height: 1.75; }
+  .contact__phone { letter-spacing: .02em; }
+
+  /* ---------- 7. 후원사 ---------- */
+  .chip { letter-spacing: -.01em; }
+
+  /* ---------- 7-2. 누르는 것은 최소 44px ----------
+     손가락 끝이 닿는 넓이입니다. 복사·탭·안내 버튼이 특히 작았습니다. */
+  .addr__copy, .cpy, .sbtn, .share, .tab, .totop, .song__action, .staff__btn {
+    min-height: 44px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .addr__copy, .cpy { padding-inline: 14px; }
+  .info__actions .btn { min-height: 52px; }
+
+  /* ---------- 8. 푸터 ---------- */
+  .footer__insta { font-size: var(--fs-body); }
+  .footer__bottom { letter-spacing: .1em; line-height: 1.6; }
+}
+
+/* ---------- 9. 터치 기기 반응 ----------
+   마우스가 없으니 눌렀을 때 반응이 있어야 살아있는 느낌이 납니다. */
+@media (hover: none) {
+  .btn, .chip, .sbtn, .share, .nav__ticket, .tab, .totop, .addr__copy {
+    transition: transform .12s ease-out;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn:active, .chip:active, .sbtn:active, .share:active,
+  .nav__ticket:active, .tab:active, .totop:active, .addr__copy:active {
+    transform: scale(.96);
+  }
+  .song { -webkit-tap-highlight-color: transparent; }
+  .song:active { background: rgba(241,234,226,.07); }
+  .song.is-now:active { background: var(--pink); }
+  /* 호버 전용 효과가 터치에서 끈적하게 남는 것을 막습니다. */
+  .chip:hover { transform: none !important; }
+  .btn:hover { transform: none; }
+}
+
+/* ---------- 10. 모션 감소 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .hero__poster-frame { animation: none !important; }
+  .btn, .chip, .sbtn, .share, .nav__ticket, .tab, .totop, .addr__copy { transition: none !important; }
+}
+
+/* ---------- 11. 아주 좁은 폰 (320px 대) ----------
+   포스터 190 + 사이 20 + 시간표 102 = 312 로 320px 화면의 내용 폭(288)을 넘어
+   포스터 왼쪽이 3px 잘렸습니다. 짝을 통째로 한 단 줄입니다. */
+@media (max-width: 359px) {
+  .hero__grid { grid-template-columns: 152px auto; gap: 26px 15px; }
+  .hero__poster { width: 152px; }
+  .hero__stages span { font-size: var(--fs-label); }
+  .hero__stages b { font-size: 11px; letter-spacing: .14em; }
+  .hero__venue { font-size: var(--fs-body); padding: 5px 12px; box-shadow: 3px 3px 0 var(--paper); }
+  .setlist__tabs { gap: 8px; }
+  /* 히어로 버튼 한 쌍(148 + 10 + 148)이 내용 폭 288 을 넘어 양옆 여백을 먹었습니다. 글자 둘레만 한 단 줄입니다 */
+  .hero__cta .btn { padding-inline: .9em; }
+}
+
+/* ---------- 12. 태블릿 (641~1024px) ----------
+   여기만 옛 배치가 남아 포스터 아래로 전부 쌓였습니다. 무대 시간표가
+   포스터에서 한참 떨어져 보이던 이유입니다. 폰과 같은 짜임으로 맞춥니다. */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .hero__grid {
+    display: grid; grid-template-columns: 300px auto;
+    justify-content: center; gap: 36px 30px;
+    align-items: center; justify-items: center;
+  }
+  .hero__left, .hero__right { display: contents; }
+  .hero__poster { grid-column: 1; grid-row: 1; width: 300px; }
+  .hero__when { grid-column: 2; grid-row: 1; justify-self: start; gap: 18px; }
+  .hero__stages { gap: 9px; }
+  .hero__headline { grid-column: 1 / -1; grid-row: 2; }
+  .countdown { grid-column: 1 / -1; grid-row: 3; }
+  .hero__date { grid-column: 1 / -1; grid-row: 4; }
+  .hero__cta { grid-column: 1 / -1; grid-row: 5; margin-top: -12px; }
+  .hero__caption { grid-column: 1 / -1; grid-row: 6; margin-top: -18px; margin-bottom: 8px; }
+}
+
+/* ---------- 13. 글꼴 한 벌 ----------
+   규칙: 함께 읽히는 글은 한글·영문·숫자 모두 프리텐다드 하나로 통일합니다.
+   다른 글꼴(Anton)은 '강조할 숫자' — 가격 · 날짜 · 카운트다운 — 에만 씁니다.
+   t-label(Anton)은 영문 전용이라 한글이 들어가면 기기 기본 글꼴로 대신 그려져, 같은 줄의 영문·숫자와
+   따로 놀았습니다(히어로 '사전 예매 ₩5,500', 티켓 페이지 입력칸 이름표 등).
+   영문만 있는 이름표(DATE · OPEN · NAME 등)와 큰 영문 제목은 그대로 Anton 입니다. */
+.hero__caption,
+.price__when, .price__note,
+.contact__role,
+.fld__label, .total__label, .pay__k, .keep__k, .mt__stub-k,
+.mt__grid small, .ticket__grid dd small {
+  font-family: var(--font-ko); font-weight: 600; letter-spacing: .02em;
+}
+/* 히어로 가격 안내: 글은 차분하게, 가격만 Anton 으로 세웁니다 */
+.hero__caption { font-weight: 500; opacity: 1; color: rgba(241,234,226,.66); }
+.hero__price {
+  font-family: var(--font-display); font-weight: 400; font-size: 1.22em; letter-spacing: .03em;
+  color: var(--paper); margin-left: .12em;
+}
+.hero__perk { font-weight: 700; letter-spacing: .06em; word-spacing: normal; color: rgba(241,234,226,.85); }
+/* 요금표 · 가격 카드 · 합계의 금액은 Anton. Anton 에는 ₩ 가 있어 한 글꼴 안에서 끝납니다 */
+.price__amount, .prow__amt, .total__num {
+  font-family: var(--font-display); font-weight: 400;
+  font-variant-numeric: normal; letter-spacing: .01em;
+}
+/* '원' 은 Anton 에 없는 글자라 프리텐다드로, 숫자보다 한 단 작게 */
+.total__num .won { font-family: var(--font-ko); font-weight: 700; font-size: .5em; margin-left: .12em; }
+/* 공지 연락처의 '회장 · 부회장' 딱지. 옆 이름(자이언츠체 20px)·번호(24px) 사이에서 14px 700 은 가늘고 작아 보여
+   굵기 한 단, 크기 15% 올립니다 */
+.contact__role { font-weight: 800; font-size: calc(var(--fs-label) * 1.15); padding: 3px 11px; }
+/* 한글 장소 이름 옆에 붙는 작은 영문 (CHEONG-CHOON SALON · JECHEON) — 같은 줄이라 프리텐다드 대문자로 */
+.mt__grid small, .ticket__grid dd small { text-transform: uppercase; letter-spacing: .1em; }
+/* 프리텐다드 대문자는 Anton 보다 넓어 PC 에서 'CHEONG-CHOON' / 'SALON' 으로 갈렸습니다. 폰처럼 이름 아래 줄로 */
+.ticket__grid dd small { display: block; margin-top: 2px; }
+@media (max-width: 359px) { .ticket__grid dd small { font-size: 12px; letter-spacing: .04em; } }

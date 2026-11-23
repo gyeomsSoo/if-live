@@ -1,0 +1,136 @@
+/* 에이전트 C: INFO / NOTICE / SPONSOR / 푸터 전용. sections.css 보다 뒤에 로드되므로 여기서 덮어쓴다. */
+/* 색은 tokens.css 의 --ink --paper --pink --mint --red 만. 글자 크기는 --fs-* 만. */
+
+/* ---------- 공통: 카드가 살짝 들리는 호버 (마우스 있는 기기에서만) ----------
+   transform 은 sections.css 의 rotate / 에이전트 A 의 GSAP 등장 모션이 쓰므로
+   건드리지 않고, 별도 속성인 translate 로만 들어 올린다. */
+@media (hover: hover) and (pointer: fine) {
+  .ticket, .ncard, .notice__contact { transition: translate .28s var(--ease-out), box-shadow .28s var(--ease-out); }
+  .ticket:hover { translate: 0 -4px; box-shadow: 14px 16px 0 var(--pink); }
+  .ncard:hover, .notice__contact:hover { translate: 0 -3px; box-shadow: 10px 11px 0 var(--ink); }
+}
+
+/* ---------- INFO: 주소 링크 + 복사 버튼 ---------- */
+.ticket__addr { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+.addr__link { text-decoration: underline; text-decoration-style: dashed; text-decoration-thickness: 2px; text-underline-offset: 5px; transition: color .15s; }
+.addr__link:hover { color: var(--pink); }
+.addr__copy {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 4px 12px;
+  border: 2px solid var(--ink); color: var(--ink); background: transparent;
+  font-family: var(--font-body); font-size: var(--fs-label); font-weight: 700; line-height: 1; letter-spacing: 0;
+  transition: background .15s, color .15s;
+}
+.addr__copy:hover { background: var(--ink); color: var(--paper); }
+.addr__copy:active { translate: 1px 1px; }
+.addr__copy svg { width: 15px; height: 15px; }
+
+/* ---------- NOTICE: 도장 (잉크 번짐 · 얼룩, CSS 만) ----------
+   마스크 = 노이즈(잔거침) × 라디얼 얼룩 3개 → 곱해서 잉크가 덜 묻은 자리를 만든다.
+   transform 은 sections.css 의 rotate(-4deg) 그대로 두고, 쿵 연출은 A 가 .stamp 에 넣는다. */
+.stamp {
+  position: relative;
+  -webkit-mask-image:
+    url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.4 0 0 0 0.18'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 34% 55% at 18% 30%, rgba(0,0,0,.72) 0%, #000 100%),
+    radial-gradient(ellipse 30% 50% at 78% 72%, rgba(0,0,0,.74) 0%, #000 100%),
+    radial-gradient(ellipse 22% 40% at 55% 12%, rgba(0,0,0,.82) 0%, #000 100%);
+  -webkit-mask-size: 180px 180px, 100% 100%, 100% 100%, 100% 100%;
+  -webkit-mask-repeat: repeat, no-repeat, no-repeat, no-repeat;
+  -webkit-mask-composite: source-in;
+  mask-image:
+    url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.4 0 0 0 0.18'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 34% 55% at 18% 30%, rgba(0,0,0,.72) 0%, #000 100%),
+    radial-gradient(ellipse 30% 50% at 78% 72%, rgba(0,0,0,.74) 0%, #000 100%),
+    radial-gradient(ellipse 22% 40% at 55% 12%, rgba(0,0,0,.82) 0%, #000 100%);
+  mask-size: 180px 180px, 100% 100%, 100% 100%, 100% 100%;
+  mask-repeat: repeat, no-repeat, no-repeat, no-repeat;
+  mask-composite: intersect;
+}
+/* 두 번 찍힌 듯한 흐릿한 테두리 (살짝 어긋남) */
+.stamp::after {
+  content: ""; position: absolute; inset: -4px; pointer-events: none;
+  border: 2px solid rgba(94,10,13,.4);
+  transform: rotate(.8deg) translate(2px, 1px);
+}
+/* 번짐 흉내를 내되 획을 흐리지는 않습니다. 경고는 읽혀야 합니다 */
+.stamp__text, .stamp__sub { text-shadow: 1px 1px 0 rgba(94,10,13,.3); }
+.stamp__text { letter-spacing: .02em; }
+
+/* ---------- NOTICE: 연락처 버튼 ---------- */
+.sbtn { transition: background .15s, color .15s, translate .15s; }
+.sbtn:hover { background: var(--ink); color: var(--paper); }
+.sbtn:active { translate: 1px 1px; }
+
+/* ---------- SPONSOR: 마키 멈춤 ---------- */
+.chip { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+@media (hover: hover) { .marquee:hover .marquee__track { animation-play-state: paused; } }
+.marquee.is-paused .marquee__track, .marquee:has(.chip:focus-visible) .marquee__track { animation-play-state: paused; }
+/* 모션 감소: 마키 대신 줄바꿈 나열(base.css). 무한 루프용 복제 칩은 숨긴다 */
+@media (prefers-reduced-motion: reduce) {
+  .chip--dup { display: none; }
+  .marquee__track { justify-content: center; row-gap: 16px; padding: 0 var(--gutter); }
+}
+
+/* ---------- 모달 (열림/닫힘 애니메이션: util.js 가 hidden 만 토글하므로 display 전환으로 처리) ---------- */
+.modal { transition-property: opacity, display; transition-duration: .28s; transition-timing-function: var(--ease-out); transition-behavior: allow-discrete; }
+.modal[hidden] { opacity: 0; }
+@starting-style { .modal { opacity: 0; } }
+.modal__box { transition: transform .34s var(--ease-out); padding: 32px 32px 30px; }
+.modal[hidden] .modal__box { transform: translateY(18px) scale(.96); }
+@starting-style { .modal__box { transform: translateY(18px) scale(.96); } }
+.modal__close { right: 6px; top: 6px; width: 44px; height: 44px; display: grid; place-items: center; }
+.modal__close:hover { color: var(--pink); }
+.modal__kicker { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-right: 40px; }
+.modal__tag {
+  display: inline-block; font-family: var(--font-body); font-weight: 700; font-size: var(--fs-label); line-height: 1;
+  padding: 5px 10px; border: 2px solid var(--ink); background: var(--ink); color: var(--paper); transform: rotate(-2deg);
+}
+.modal__tag--식당 { background: var(--pink); color: var(--ink); }
+.modal__tag--주점, .modal__tag--카페 { background: var(--mint); color: var(--ink); }
+.modal__tag--노래방 { background: var(--ink); color: var(--paper); }
+.modal__name { font-size: var(--fs-num); line-height: 1.05; margin: 12px 0 14px; word-break: keep-all; }
+.modal__desc { margin-bottom: 24px; }
+.modal__actions { display: flex; gap: 14px; flex-wrap: wrap; }
+.modal__actions .btn { flex: 1 1 0; min-width: 0; padding: 12px 16px; font-size: var(--fs-body); }
+.modal__actions .btn svg { flex: 0 0 auto; }
+.btn--ink { background: var(--ink); color: var(--paper); border-color: var(--ink); box-shadow: 6px 6px 0 var(--mint); }
+
+/* ---------- 토스트 (아래에서 살짝 올라옴) ---------- */
+.toast {
+  bottom: calc(28px + env(safe-area-inset-bottom)); width: max-content; max-width: calc(100% - 32px); text-align: center;
+  transition-property: opacity, translate, display; transition-duration: .3s; transition-timing-function: var(--ease-out); transition-behavior: allow-discrete;
+}
+.toast[hidden] { opacity: 0; translate: 0 18px; }
+@starting-style { .toast { opacity: 0; translate: 0 18px; } }
+
+/* ---------- 맨 위로 (share.js 가 body 끝에 생성) ---------- */
+.totop {
+  position: fixed; right: max(20px, env(safe-area-inset-right)); bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 60;
+  width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--paper); color: var(--ink); border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--pink);
+  opacity: 0; visibility: hidden; translate: 0 14px;
+  transition: opacity .28s var(--ease-out), translate .28s var(--ease-out), box-shadow .18s var(--ease-out), visibility 0s .28s;
+}
+.totop svg { width: 24px; height: 24px; }
+.totop.is-visible { opacity: 1; visibility: visible; translate: 0 0; transition-delay: 0s; }
+.totop.is-visible:hover { translate: 0 -2px; box-shadow: 6px 6px 0 var(--pink); }
+.totop.is-visible:active { translate: 1px 1px; box-shadow: 2px 2px 0 var(--pink); }
+
+/* ============ 태블릿 / 모바일 ============ */
+@media (max-width: 1024px) {
+  /* 우하단 버튼과 겹치지 않게 토스트를 위로 */
+  .toast { bottom: calc(84px + env(safe-area-inset-bottom)); }
+}
+@media (max-width: 640px) {
+  .modal__box { padding: 24px 20px 22px; }
+  .modal__name { font-size: var(--fs-h2); }
+  .modal__actions { gap: 10px; }
+  .modal__actions .btn { padding: 12px 8px; gap: 6px; }
+  .totop { width: 48px; height: 48px; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); }
+  .totop svg { width: 22px; height: 22px; }
+}
+
+/* ============ 모션 감소 ============ */
+@media (prefers-reduced-motion: reduce) {
+  .ticket, .ncard, .notice__contact, .addr__copy, .addr__link, .sbtn, .chip, .modal, .modal__box, .toast, .totop { transition: none !important; }
+}

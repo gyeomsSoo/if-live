@@ -1,0 +1,16 @@
+{
+  "bank": "OO은행",
+  "account": "000-0000-0000",
+  "holder": "예금주",
+  "price": 5500,
+  "doorPrice": 6500,
+  "presaleEndAt": "2026-11-04T23:59:59+09:00",
+  "eventAt": "2026-11-05T19:00:00+09:00",
+  "gachaOpenAt": "2026-11-05T19:00:00+09:00",
+  "gachaCloseAt": "2026-11-06T02:00:00+09:00",
+  "adminPassword": "여기에-긴-비밀번호",
+  "staffPath": "/staff-추측하기-어려운-값",
+  "maxQtyPerOrder": 99,
+  "testMode": true,
+  "siteUrl": "https://ifband.kro.kr"
+}
